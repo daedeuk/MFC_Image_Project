@@ -30,6 +30,7 @@ public:
 
 
 private:
+	CNewProject01Doc* pDoc;
 	CDC *mp_display_memory;
 	CBitmap *mp_bitmap, *mp_old_bitmap;
 	CRect m_image_rect;
@@ -46,13 +47,13 @@ private:
 	BITMAP bmpinfo;
 
 protected:
-	virtual void OnDraw(CDC* pDC);
 
 public:
 	enum{ IDD = IDD_NEWPROJECT01_FORM };
 
 // 특성입니다.
 public:
+
 	CNewProject01Doc* GetDocument() const;
 
 // 작업입니다.
@@ -60,6 +61,8 @@ public:
 
 // 재정의입니다.
 public:
+	virtual void OnDraw(CDC* pDC);
+
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.

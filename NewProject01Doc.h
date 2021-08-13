@@ -20,6 +20,7 @@ public:
 
 // 재정의입니다.
 public:
+	CImage m_Image;
 	virtual BOOL OnNewDocument();
 	virtual void Serialize(CArchive& ar);
 #ifdef SHARED_HANDLERS

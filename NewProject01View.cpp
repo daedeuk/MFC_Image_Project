@@ -100,7 +100,6 @@ void CNewProject01View::OnImageLoadImage()
 	//CClientDC dc(this);
 	HWND hWnd = m_stDisp.GetSafeHwnd();
 	HDC hdc = ::GetDC(hWnd);
-
 	///c_image.Create(512, 512, 32);
 	//unsigned char *p_src_image = new unsigned char[512 * 512];
 	//unsigned char *p_dest_image = new unsigned char[512 * 512 * 4];
@@ -115,23 +114,21 @@ void CNewProject01View::OnImageLoadImage()
 	CString strPathname;
 	CFile f;
 	//CDib rtrt();
-	
+	pDoc = GetDocument();
 	if (dlg.DoModal() == IDOK)
 	{
 		strPathname = dlg.GetPathName();
 		HRESULT hr=c_image.Load(strPathname);
+		pDoc->m_Image.Load(strPathname);
+		//HRESULT hr = pDoc->m_Image.Load(strPathname);
 		if (SUCCEEDED(hr))
 		{
-			image_rect;
 			::GetWindowRect(hWnd, &image_rect);
 			::SetStretchBltMode(hdc, HALFTONE);
-			c_image.Draw(hdc, 0, 0, image_rect.Width(), image_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
+			Invalidate(false);
+			//ReleaseDC();
+			//c_image.Draw(hdc, 0, 0, image_rect.Width(), image_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
 		}
-		//c_image.Draw(dc, 0, 0);
-		//ReleaseDC(*hWnd);
-		//c_image.Load(strPathname);
-		//x = c_image.GetWidth();
-		//y = c_image.GetHeight();
 		CSize image_xy(x, y);
 		if (f.Open(strPathname, CFile::modeRead))
 		{
@@ -146,48 +143,29 @@ void CNewProject01View::OnImageLoadImage()
 void CNewProject01View::OnDraw(CDC* pDC)
 {
 
-	#define WIDTHBYTES(bits)	(((bits)+31)/32*4);        //이미지 가로 바이트 길이는 4바이트의 배수
-	//BmInfo;
-	int height;
-	int width;
-	int rwsize;
-
 	CNewProject01Doc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
-
 	if (!pDoc)
 		return;
-
+	
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
-	if (pDoc->m_InImg == NULL)
-	return;
-
-	 /*
-	//24비트 비트맵 파일의 영상출력
-	if (pDoc->dibHi.biBitCount == 24){
-		height = pDoc->dibHi.biHeight;
-		width = pDoc->dibHi.biWidth;
-		rwsize = WIDTHBYTES(pDoc->dibHi.biBitCount*pDoc->dibHi.biWidth);
-		BmInfo->bmiHeader = pDoc->dibHi;
-		SetDIBitsToDevice(pDC->GetSafeHdc(), 0, 0, width, height, 0, 0, 0, height, pDoc->m_InImg, BmInfo, DIB_RGB_COLORS);
-	}
-	else	//8비트 컬러일 경우
+	if (!pDoc->m_Image.IsNull())
 	{
-		int index;
-		rwsize = WIDTHBYTES(pDoc->dibHi.biBitCount*pDoc->dibHi.biWidth);
-		//팔레트를 읽어들이며 반복출력
-		for (int i = 0; i<pDoc->dibHi.biHeight; i++)
-		for (int j = 0; j < pDoc->dibHi.biWidth; j++){
-			index = pDoc->m_InImg[i*rwsize + j];
-			BYTE R = pDoc->palRGB[index].rgbRed;
-			BYTE G = pDoc->palRGB[index].rgbGreen;
-			BYTE B = pDoc->palRGB[index].rgbBlue;
-			//pDC->SetPixel(j,i,RGB(R,G,B));
-			//영상 반전출력
-			pDC->SetPixel(j, pDoc->dibHi.biHeight - i - 1, RGB(R, G, B));
-		}
+		CClientDC dc(this);
+		CRect this_rect;
+		dc.GetClipBox(&this_rect);
+		int wid = this_rect.Width();
+		int hei = this_rect.Height();
+		pDC->SetStretchBltMode(COLORONCOLOR);
+
+		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
+		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, image_rect.Width(), image_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
+		pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
+		ReleaseDC(&dc);
+		ReleaseDC(pDC);
+		
 	}
-	 */
+	/*
 	mp_display_memory = new CDC();
 	mp_bitmap = new CBitmap();
 	GetClientRect(m_image_rect);
@@ -202,13 +180,11 @@ void CNewProject01View::OnDraw(CDC* pDC)
 	mp_display_memory->Rectangle(0, 0, m_image_rect.Width(), m_image_rect.Height());
 	mp_display_memory->SelectObject(mp_old_bitmap);
 
-
-
 	mp_old_bitmap = mp_display_memory->SelectObject(mp_bitmap);
 	mp_display_memory->Rectangle(0, 0, 250, 250);
 	dc.BitBlt(0, 0, m_image_rect.Width(), m_image_rect.Height(), mp_display_memory, 0, 0, SRCCOPY);
 	mp_display_memory->SelectObject(mp_old_bitmap);
-	
+	*/
 }
 
 void CNewProject01View::OnDestroy()
