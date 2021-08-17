@@ -179,7 +179,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		dc.GetClipBox(&this_rect);
 		int wid = this_rect.Width();
 		int hei = this_rect.Height();
-		pDC->SetStretchBltMode(COLORONCOLOR);
+		//pDC->SetStretchBltMode(COLORONCOLOR);
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, image_rect.Width(), image_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, this_rect.Width()*0.9, this_rect.Height()*0.9, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
@@ -192,6 +192,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		//pDoc->m_Image.BitBlt(pDC->m_hDC,xxx,yyy, wid,hei, SRCCOPY);
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, xxx, yyy, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
 		//pDoc->m_Image.BitBlt(pDC->m_hDC, 0,0, CPoint(100,100),SRCCOPY);
+		SetStretchBltMode(pDC->m_hDC, HALFTONE);
 		pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, xxx, yyy, SRCCOPY);
 		//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), SRCCOPY);
 		//DeleteObject(pDoc->m_Image);
