@@ -29,6 +29,8 @@ BEGIN_MESSAGE_MAP(CNewProject01View, CFormView)
 	//ON_COMMAND(ID_FILE_SAVE, &CnewProject01View::OnImageSaveImage)
 	ON_WM_DESTROY()
 	ON_STN_CLICKED(IDC_STATIC_DISP, &CNewProject01View::OnStnClickedStaticDisp)
+	ON_WM_LBUTTONDOWN()
+	ON_WM_RBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CNewProject01View 생성/소멸
@@ -36,6 +38,7 @@ END_MESSAGE_MAP()
 CNewProject01View::CNewProject01View()
 : CFormView(CNewProject01View::IDD)
 {
+	m_nMagnify = 1;
 	// TODO: 여기에 생성 코드를 추가합니다.
 
 	BmInfo = (BITMAPINFO*)malloc(sizeof(BITMAPINFO)+256 * sizeof(RGBQUAD));
@@ -183,17 +186,32 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, image_rect.Width(), image_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, this_rect.Width()*0.9, this_rect.Height()*0.9, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
-
-		int xx = pDoc->m_Image.GetWidth();
-		int yy = pDoc->m_Image.GetHeight();
-		int xxx=wid*xx / (xx + yy);
-		int yyy=wid*yy / (xx + yy);
-		//int zzz = wid*yy / x;
 		//pDoc->m_Image.BitBlt(pDC->m_hDC,xxx,yyy, wid,hei, SRCCOPY);
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, xxx, yyy, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
 		//pDoc->m_Image.BitBlt(pDC->m_hDC, 0,0, CPoint(100,100),SRCCOPY);
 		SetStretchBltMode(pDC->m_hDC, HALFTONE);
-		pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, xxx, yyy, SRCCOPY);
+		if (m_nMagnify >= 1)
+		{
+			int xx = pDoc->m_Image.GetWidth()*m_nMagnify;
+			int yy = pDoc->m_Image.GetHeight()*m_nMagnify;
+			int xxx = wid*xx / (xx + yy);
+			int yyy = wid*yy / (xx + yy);
+			//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, xxx, yyy, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
+			pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, xxx, yyy, 0, 0, xx, yy);
+			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, xxx*m_nMagnify, yyy*m_nMagnify, SRCCOPY);
+			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, xxx, yyy, SRCCOPY);
+		}
+		else
+		{
+			int xx = pDoc->m_Image.GetWidth()/(2-m_nMagnify);
+			int yy = pDoc->m_Image.GetHeight()/(2-m_nMagnify);
+			int xxx = wid*xx / (xx + yy);
+			int yyy = wid*yy / (xx + yy);
+			//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, xxx, yyy, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
+			pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, xxx, yyy, 0, 0, xx, yy);
+			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, xxx*m_nMagnify, yyy*m_nMagnify, SRCCOPY);
+			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, xxx, yyy, SRCCOPY);
+		}
 		//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), SRCCOPY);
 		//DeleteObject(pDoc->m_Image);
 		ReleaseDC(&dc);
@@ -238,4 +256,25 @@ void CNewProject01View::OnDraw(CDC* pDC)
 void CNewProject01View::OnStnClickedStaticDisp()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+
+void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	--m_nMagnify;
+	m_VectorRect.push_back(CRect(point.x,point.y,0,0));
+	Invalidate();
+	CFormView::OnLButtonDown(nFlags, point);
+}
+
+
+void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	++m_nMagnify;
+	m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
+	Invalidate();
+	CFormView::OnRButtonDown(nFlags, point);
 }

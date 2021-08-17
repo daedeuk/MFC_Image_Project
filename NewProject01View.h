@@ -9,7 +9,10 @@
 #include "NewProject01Doc.h"
 #include "cdib.h"
 #include "afxwin.h"
+#include <iostream>
+#include <vector>
 
+using namespace std;
 
 class CNewProject01View : public CFormView
 {
@@ -18,7 +21,9 @@ protected: // serialization에서만 만들어집니다.
 	DECLARE_DYNCREATE(CNewProject01View)
 public:
 	CImage c_image;
-	
+	int m_nMagnify;
+	vector<CRect> m_VectorRect;
+	vector<CString> m_VectorString;
 	/*
 	unsigned char *m_InImg; //bmp 파일의 이미지 내용 저장
 	unsigned char *m_OutImg; //bmp이미지 출력용 배열
@@ -93,6 +98,8 @@ public:
 	afx_msg void OnStnClickedStaticDisp();
 	CStatic m_stDisp;
 	CStatic M_stDisp;
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // NewProject01View.cpp의 디버그 버전
