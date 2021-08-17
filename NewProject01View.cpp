@@ -25,6 +25,10 @@ BEGIN_MESSAGE_MAP(CNewProject01View, CFormView)
 	ON_COMMAND(ID_FILE_OPEN, &CNewProject01View::OnImageLoadImage)
 	ON_WM_DESTROY()
 	ON_STN_CLICKED(IDC_STATIC_DISP, &CNewProject01View::OnStnClickedStaticDisp)
+	ON_WM_LBUTTONDOWN()
+//	ON_WM_LBUTTONUP()
+//	ON_WM_RBUTTONDOWN()
+//	ON_WM_RBUTTONUP()
 END_MESSAGE_MAP()
 
 // CNewProject01View 생성/소멸
@@ -32,6 +36,7 @@ END_MESSAGE_MAP()
 CNewProject01View::CNewProject01View()
 : CFormView(CNewProject01View::IDD)
 {
+	m_nMagnify = 1;
 	// TODO: 여기에 생성 코드를 추가합니다.
 
 	BmInfo = (BITMAPINFO*)malloc(sizeof(BITMAPINFO)+256 * sizeof(RGBQUAD));
@@ -157,13 +162,16 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		int wid = this_rect.Width();
 		int hei = this_rect.Height();
 		pDC->SetStretchBltMode(COLORONCOLOR);
-
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, image_rect.Width(), image_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
-		pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
+		if (m_nMagnify >= 1)
+		{
+			pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
+		}
+		else
+
 		ReleaseDC(&dc);
 		ReleaseDC(pDC);
-		
 	}
 	/*
 	mp_display_memory = new CDC();
@@ -205,4 +213,18 @@ void CNewProject01View::OnDestroy()
 void CNewProject01View::OnStnClickedStaticDisp()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	//큰 이미지 자체는 c_image에 저장되어있다.
+	//draw할때 dest(내가 나타낼 영역을 어떻게 곱해줄지(확대))
+	//draw할때 source(내가 보는 영역을 어떤부분을 볼지)가 중요하다.
+	if (nFlags & MK_SHIFT)
+	{
+
+	}
+	CFormView::OnLButtonDown(nFlags, point);
 }
