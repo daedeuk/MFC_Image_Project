@@ -12,6 +12,8 @@
 #include "NewProject01Doc.h"
 #include "NewProject01View.h"
 
+#include <atlimage.h>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -23,12 +25,10 @@ IMPLEMENT_DYNCREATE(CNewProject01View, CFormView)
 
 BEGIN_MESSAGE_MAP(CNewProject01View, CFormView)
 	ON_COMMAND(ID_FILE_OPEN, &CNewProject01View::OnImageLoadImage)
+	ON_UPDATE_COMMAND_UI(ID_FILE_OPEN, &CNewProject01View::OnUpdateImageLoadimage)
+	//ON_COMMAND(ID_FILE_SAVE, &CnewProject01View::OnImageSaveImage)
 	ON_WM_DESTROY()
 	ON_STN_CLICKED(IDC_STATIC_DISP, &CNewProject01View::OnStnClickedStaticDisp)
-	ON_WM_LBUTTONDOWN()
-//	ON_WM_LBUTTONUP()
-//	ON_WM_RBUTTONDOWN()
-//	ON_WM_RBUTTONUP()
 END_MESSAGE_MAP()
 
 // CNewProject01View 생성/소멸
@@ -36,7 +36,6 @@ END_MESSAGE_MAP()
 CNewProject01View::CNewProject01View()
 : CFormView(CNewProject01View::IDD)
 {
-	m_nMagnify = 1;
 	// TODO: 여기에 생성 코드를 추가합니다.
 
 	BmInfo = (BITMAPINFO*)malloc(sizeof(BITMAPINFO)+256 * sizeof(RGBQUAD));
@@ -99,12 +98,16 @@ CNewProject01Doc* CNewProject01View::GetDocument() const // 디버그되지 않은 버전
 // CNewProject01View 메시지 처리기
 void CNewProject01View::OnImageLoadImage()
 {
-
 	//CWnd *p_wnd = GetDlgItem(ID_FILE_OPEN);
 	//CDC *cdc = GetDC();
 	//CClientDC dc(this);
 	HWND hWnd = m_stDisp.GetSafeHwnd();
 	HDC hdc = ::GetDC(hWnd);
+	/*
+	HBITMAP h_bitmap = (HBITMAP)GetCurrentObject(hdc, OBJ_BITMAP);
+	BITMAP bmp_info;
+	GetObject(h_bitmap, sizeof(BITMAP), &bmp_info);
+	*/
 	///c_image.Create(512, 512, 32);
 	//unsigned char *p_src_image = new unsigned char[512 * 512];
 	//unsigned char *p_dest_image = new unsigned char[512 * 512 * 4];
@@ -116,33 +119,44 @@ void CNewProject01View::OnImageLoadImage()
 
 	CString szFilter = L"Image files (*.bmp, *.jpg) | *.bmp; *.jpg; | All Files(*.*)|*.*||";
 	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY, szFilter);
-	CString strPathname;
-	CFile f;
-	//CDib rtrt();
-	pDoc = GetDocument();
+	//pDoc = GetDocument();
 	if (dlg.DoModal() == IDOK)
 	{
-		strPathname = dlg.GetPathName();
-		HRESULT hr=c_image.Load(strPathname);
+
+		CString strPathname = dlg.GetPathName();
+		pDoc = GetDocument();
+		CFile f;
+		//HRESULT hr = c_image.Load(strPathname);
+		if (!pDoc->m_Image.IsNull())
+		{
+			pDoc->m_Image.Destroy();
+		}
 		pDoc->m_Image.Load(strPathname);
-		//HRESULT hr = pDoc->m_Image.Load(strPathname);
+		::ReleaseDC(hWnd, hdc);
+		Invalidate(false);
+		/*
 		if (SUCCEEDED(hr))
-		{
-			::GetWindowRect(hWnd, &image_rect);
-			::SetStretchBltMode(hdc, HALFTONE);
-			Invalidate(false);
-			//ReleaseDC();
-			//c_image.Draw(hdc, 0, 0, image_rect.Width(), image_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
-		}
-		CSize image_xy(x, y);
-		if (f.Open(strPathname, CFile::modeRead))
-		{
-			CArchive ar(&f, CArchive::load);
-			//bmp = LoadImage(NULL, strPathname, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-			//mp_bitmap->Attach(bmp);
-			//mp_bitmap->GetBitmap(&bmpinfo);
-		}
+			{
+				::GetWindowRect(hWnd, &image_rect);
+				::SetStretchBltMode(hdc, HALFTONE);
+				::ReleaseDC(hWnd, hdc);
+				Invalidate(false); 
+				//ReleaseDC();
+				//c_image.Draw(hdc, 0, 0, image_rect.Width(), image_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
+			}
+		*/
 	}
+}
+void CNewProject01View::OnUpdateImageLoadimage(CCmdUI *pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+}
+//CString format
+// 0 : image/bmp	// 1 : image/jpeg	// 2 : image/gif	// 3 : image/tiff	// 4 : image/png
+
+void CNewProject01View::OnImageSaveImage()
+{
+
 }
 
 void CNewProject01View::OnDraw(CDC* pDC)
@@ -164,12 +178,8 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		pDC->SetStretchBltMode(COLORONCOLOR);
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, image_rect.Width(), image_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
-		if (m_nMagnify >= 1)
-		{
-			pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
-		}
-		else
-
+		pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
+		pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), SRCCOPY);
 		ReleaseDC(&dc);
 		ReleaseDC(pDC);
 	}
@@ -195,12 +205,11 @@ void CNewProject01View::OnDraw(CDC* pDC)
 	*/
 }
 
-void CNewProject01View::OnDestroy()
+	void CNewProject01View::OnDestroy()
 {
 	CFormView::OnDestroy();
 	mp_bitmap->DeleteObject();
-	mp_display_memory->DeleteDC();
-
+	mp_display_memory->DeleteDC();\
 	delete mp_bitmap;
 	delete mp_display_memory;
 	delete bmp;
@@ -213,18 +222,4 @@ void CNewProject01View::OnDestroy()
 void CNewProject01View::OnStnClickedStaticDisp()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-}
-
-
-void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
-{
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	//큰 이미지 자체는 c_image에 저장되어있다.
-	//draw할때 dest(내가 나타낼 영역을 어떻게 곱해줄지(확대))
-	//draw할때 source(내가 보는 영역을 어떤부분을 볼지)가 중요하다.
-	if (nFlags & MK_SHIFT)
-	{
-
-	}
-	CFormView::OnLButtonDown(nFlags, point);
 }
