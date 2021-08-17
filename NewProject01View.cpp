@@ -101,8 +101,12 @@ void CNewProject01View::OnImageLoadImage()
 	//CWnd *p_wnd = GetDlgItem(ID_FILE_OPEN);
 	//CDC *cdc = GetDC();
 	//CClientDC dc(this);
+	
+	/*
 	HWND hWnd = m_stDisp.GetSafeHwnd();
 	HDC hdc = ::GetDC(hWnd);
+	*/
+
 	/*
 	HBITMAP h_bitmap = (HBITMAP)GetCurrentObject(hdc, OBJ_BITMAP);
 	BITMAP bmp_info;
@@ -132,8 +136,8 @@ void CNewProject01View::OnImageLoadImage()
 			pDoc->m_Image.Destroy();
 		}
 		pDoc->m_Image.Load(strPathname);
-		::ReleaseDC(hWnd, hdc);
-		Invalidate(false);
+		//::ReleaseDC(hWnd, hdc);
+		Invalidate(true);
 		/*
 		if (SUCCEEDED(hr))
 			{
@@ -178,8 +182,19 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		pDC->SetStretchBltMode(COLORONCOLOR);
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
 		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, image_rect.Width(), image_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
-		pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
-		pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), SRCCOPY);
+		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, this_rect.Width()*0.9, this_rect.Height()*0.9, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
+
+		int xx = pDoc->m_Image.GetWidth();
+		int yy = pDoc->m_Image.GetHeight();
+		int xxx=wid*xx / (xx + yy);
+		int yyy=wid*yy / (xx + yy);
+		//int zzz = wid*yy / x;
+		//pDoc->m_Image.BitBlt(pDC->m_hDC,xxx,yyy, wid,hei, SRCCOPY);
+		//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, xxx, yyy, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
+		//pDoc->m_Image.BitBlt(pDC->m_hDC, 0,0, CPoint(100,100),SRCCOPY);
+		pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, xxx, yyy, SRCCOPY);
+		//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), SRCCOPY);
+		//DeleteObject(pDoc->m_Image);
 		ReleaseDC(&dc);
 		ReleaseDC(pDC);
 	}
