@@ -197,6 +197,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			double hei = this_rect.Height();
 			p_point.x = m_point.x*wid / i_wid;
 			p_point.y = m_point.y*hei / i_hei;
+
 			m_point.x = m_point.x*i_wid / wid;
 			m_point.y = m_point.y*i_hei / hei;
 			//CRect new_rect(p_point.x - this_rect.Width()*m_nMagnify/2, p_point.y - this_rect.Height()*m_nMagnify/2, p_point.x + this_rect.Width()*m_nMagnify / 2, p_point.y + this_rect.Height()*m_nMagnify / 2);
@@ -214,7 +215,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, xxx, yyy, SRCCOPY);
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, 0, 0,zoom_x, zoom_y, SRCCOPY);
 			
-			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid,hei, 0, 0, i_wid, i_hei,SRCCOPY);
+			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, 0, 0, i_wid, i_hei);
 			//zoom = 1;
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, m_point.x - (i_wid)/2* zoom, m_point.y - (i_hei)/2 *zoom, m_point.x + (i_wid)/2*zoom, m_point.y + (i_hei)/2*zoom, SRCCOPY);
 			
@@ -248,7 +249,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, xxx, yyy, SRCCOPY);
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, 0, 0, zoom_xx, zoom_yy, SRCCOPY);
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, m_point.x - (i_wid) / 2 * (2 - m_nMagnify), m_point.y - i_hei*(2 - m_nMagnify) / 2, m_point.x + (i_wid) / 2 * (2 - m_nMagnify), m_point.y + i_hei*(2 - m_nMagnify) / 2, SRCCOPY);
-			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, 0, 0, i_wid, i_hei,SRCCOPY);
+				pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, 0, 0, i_wid, i_hei);
 			//zoom = 1;
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, m_point.x -(i_wid)/ 2 * zoom, m_point.y - (i_hei) / 2 * zoom, m_point.x + (i_wid) / 2 * zoom, m_point.y + (i_hei) / 2 * zoom, SRCCOPY);
 		}
