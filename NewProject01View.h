@@ -20,7 +20,10 @@ protected: // serialization에서만 만들어집니다.
 	CNewProject01View();
 	DECLARE_DYNCREATE(CNewProject01View)
 public:
+	CPoint p_point;
+	CPoint m_point;
 	CImage c_image;
+	float zoom;
 	int m_nMagnify;
 	vector<CRect> m_VectorRect;
 	vector<CString> m_VectorString;
