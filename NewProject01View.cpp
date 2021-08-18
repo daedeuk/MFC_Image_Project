@@ -181,14 +181,6 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		CClientDC dc(this);
 		pDC = &dc;
 
-		/*
-		CDC *cdc=pre->GetDC();
-		CRect p_rect;
-		CDC *ppDC;
-		dc.GetClipBox(&cdc);
-		pre->p_wid = p_rect.Width();
-		pre->p_hei = p_rect.Height();
-		*/
 		CRect new_rect;
 		dc.GetClipBox(&new_rect);
 		if (1)
@@ -299,7 +291,6 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 	m_VectorRect.push_back(CRect(point.x,point.y,0,0));
 	p_point.x = point.x;
 	p_point.y= point.y;
-
 	if (i_wid != 0 && wid != 0)
 	{
 		m_point.x=p_point.x / wid*i_wid;

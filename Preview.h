@@ -1,6 +1,5 @@
 #pragma once
 #include "resource.h"
-#include "NewProject01View.h"
 #include "stdafx.h"
 
 // Preview 대화 상자입니다.

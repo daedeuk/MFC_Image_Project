@@ -69,6 +69,8 @@ void Preview::OnPaint()
 	if (!p_image.IsNull())
 	{
 		SetStretchBltMode(pdc->m_hDC, HALFTONE);
+		//p_image.Draw(pdc->m_hDC, 0, 0, p_wid, p_hei, 0, 0, i_wid, i_hei, SRCCOPY);
+		//p_image.Draw(pdc->m_hDC, 0, 0, p_wid, p_hei, 0, 0, i_wid, i_hei);
 		p_image.StretchBlt(pdc->m_hDC, 0, 0, p_wid, p_hei, 0, 0, i_wid, i_hei, SRCCOPY);
 	}
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.

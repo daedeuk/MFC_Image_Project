@@ -1,27 +1,17 @@
-﻿빌드 시작: 2021-08-18 오후 2:40:38
+﻿빌드 시작: 2021-08-18 오후 3:05:28
      1>2 노드의 "C:\Users\ddshin\Desktop\Git\NewProject\NewProject01.vcxproj" 프로젝트(Build 대상)입니다.
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\NewProject01.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Image.cpp ImageFrame.cpp NewProject01.cpp NewProject01View.cpp PointFloat.cpp Preview.cpp ZoomInfo.cpp ZoomInfo_Multi.cpp
-         NewProject01View.cpp
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(203): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(216): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(226): warning C4804: '<' : 연산에 'bool' 형식을 사용하는 것은 안전하지 않습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(230): warning C4804: '<' : 연산에 'bool' 형식을 사용하는 것은 안전하지 않습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(256): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(266): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(305): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(306): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(322): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(323): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+         Image.cpp
          코드를 생성하고 있습니다...
          건너뛰고 있습니다... (관련된 변경 내용 없음)
+         Preview.cpp
          ZoomInfo_Multi.cpp
          ZoomInfo.cpp
-         Preview.cpp
          PointFloat.cpp
+         NewProject01View.cpp
          NewProject01.cpp
          ImageFrame.cpp
-         Image.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\ddshin\Desktop\Git\NewProject\Debug\NewProject01.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"C:\Users\ddshin\Desktop\Git\NewProject\Debug\NewProject01.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"wWinMainCRTStartup" /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\ddshin\Desktop\Git\NewProject\Debug\NewProject01.lib" /MACHINE:X86 Debug\NewProject01.res
          Debug\cdib.obj
@@ -41,4 +31,4 @@
 
 빌드했습니다.
 
-경과 시간: 00:00:00.71
+경과 시간: 00:00:00.72
