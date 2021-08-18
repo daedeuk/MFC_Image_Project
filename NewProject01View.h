@@ -11,6 +11,7 @@
 #include "afxwin.h"
 #include <iostream>
 #include <vector>
+#include "Preview.h"
 
 using namespace std;
 
@@ -77,6 +78,7 @@ public:
 // 재정의입니다.
 public:
 	virtual void OnDraw(CDC* pDC);
+	CRect CNewProject01View::Zoom_in_out(int m_nMagnify);
 
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 protected:

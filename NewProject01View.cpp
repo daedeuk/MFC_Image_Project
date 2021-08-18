@@ -131,6 +131,8 @@ void CNewProject01View::OnImageLoadImage()
 		CString strPathname = dlg.GetPathName();
 		pDoc = GetDocument();
 		CFile f;
+		Preview *pre = new Preview;
+		pre->Create(IDD_DIALOG1);
 		//HRESULT hr = c_image.Load(strPathname);
 		if (!pDoc->m_Image.IsNull())
 		{
@@ -139,22 +141,16 @@ void CNewProject01View::OnImageLoadImage()
 			m_point.x = pDoc->m_Image.GetWidth() / 2;
 			m_point.y = pDoc->m_Image.GetHeight() / 2;
 			pDoc->m_Image.Destroy();
+			pre->p_image.Destroy();
+			//pre->DestroyWindow();
+			//pre = NULL;
 		}
 		pDoc->m_Image.Load(strPathname);
+		pre->p_image.Load(strPathname);
+		pre->ShowWindow(SW_SHOW);
 		//c_image.Load(strPathname);
 		//::ReleaseDC(hWnd, hdc);
 		Invalidate(true);
-		/*
-		if (SUCCEEDED(hr))
-			{
-				::GetWindowRect(hWnd, &image_rect);
-				::SetStretchBltMode(hdc, HALFTONE);
-				::ReleaseDC(hWnd, hdc);
-				Invalidate(false); 
-				//ReleaseDC();
-				//c_image.Draw(hdc, 0, 0, image_rect.Width(), image_rect.Height(), 0, 0, c_image.GetWidth(), c_image.GetHeight());
-			}
-		*/
 	}
 }
 void CNewProject01View::OnUpdateImageLoadimage(CCmdUI *pCmdUI)
@@ -182,6 +178,15 @@ void CNewProject01View::OnDraw(CDC* pDC)
 	{
 		CClientDC dc(this);
 		pDC = &dc;
+
+		/*
+		CDC *cdc=pre->GetDC();
+		CRect p_rect;
+		CDC *ppDC;
+		dc.GetClipBox(&cdc);
+		pre->p_wid = p_rect.Width();
+		pre->p_hei = p_rect.Height();
+		*/
 		CRect new_rect;
 		dc.GetClipBox(&new_rect);
 		if (1)
@@ -203,32 +208,14 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			m_point.y = pDoc->m_Image.GetHeight() / 2;
 			zoom = 1.2 - 2 * ((double)m_nMagnify / 10);
 			double x1 = m_point.x - (i_wid / 2)*zoom;
-			if (x1 < 0)
-			{
-				x1 = 0;
-			}
 			double y1 = m_point.y - (i_hei / 2)*zoom;
-			if (y1 < 0)
-			{
-				y1 = 0;
-			}
 			double x2 = m_point.x + (i_wid / 2)*zoom;
-			if (x2>i_wid)
-			{
-				x2 = i_wid;
-			}
 			double y2 = m_point.y + (i_hei / 2)*zoom;
-			if (y2 > i_hei)
-			{
-				y2 = i_hei;
-			}
-			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, m_point.x - (i_wid / 2)*zoom, m_point.y - (i_hei / 2)*zoom, m_point.x + (i_wid / 2)*zoom, m_point.y + (i_hei / 2)*zoom, SRCCOPY);
 			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
+			//pDoc->m_Image.StretchBlt(cdc->m_hDC, 0, 0, pre->p_wid, pre->p_hei, 0,0,i_wid,i_hei,SRCCOPY);
 		}
 		else if (m_nMagnify > 1)
 		{
-			//CRect this_rect(0, 0, (wid)*zoom, (hei)*zoom);
-			//float zoom = (10 - 3*(float)m_nMagnify) / 10;
 			if (m_nMagnify<11)
 			{
 				zoom = 1.1 - ((double)m_nMagnify / 10); //1.0 0.9 0.8 ~~ 0.1까지
@@ -242,11 +229,6 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			{
 				zoom = 0.05 - 2*(double)m_nMagnify / 1000;							//-0.004 -0.0042 -0.0044 0.008 0.00
 			}
-			//p_point.x = m_point.x*wid / i_wid;
-			//p_point.y = m_point.y*hei / i_hei;
-
-			//m_point.x = m_point.x*i_wid / wid;
-			//m_point.y = m_point.y*i_hei / hei;
 			
 			double x1 = m_point.x - (i_wid / 2)*zoom;
 			if (x1 < 0)
@@ -270,100 +252,28 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			}
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, m_point.x - (i_wid/2)*zoom, m_point.y - (i_hei/2)*zoom, m_point.x + (i_wid/2)*zoom, m_point.y + (i_hei/2)*zoom,SRCCOPY);
 			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
-			//CRect new_rect(p_point.x - this_rect.Width()*m_nMagnify/2, p_point.y - this_rect.Height()*m_nMagnify/2, p_point.x + this_rect.Width()*m_nMagnify / 2, p_point.y + this_rect.Height()*m_nMagnify / 2);
-			
-			//double zoom_x = new_rect.Width();
-			//double zoom_y = new_rect.Height();
-
-			//double zoom_x = pDoc->m_Image.GetWidth()*m_nMagnify;
-			//double zoom_y = pDoc->m_Image.GetHeight()*m_nMagnify;
 
 		}
 		else if (m_nMagnify<1)
 		{
-			float zoom = 1 - 2 * ( ((float)m_nMagnify-1) / 10); //1.2 1.4 1.6 1.8 2.0 2.2
-			//p_point.x = m_point.x*wid / i_wid;
-			//p_point.y = m_point.y*hei / i_hei;
-			
-			/*
-			if (m_point.x > wid)
-			{
-				m_point.x = wid;
-			}
-			if (m_point.y > hei)
-			{
-				m_point.y = hei;
-			}
-			*/
-
-			//m_point.x = m_point.x*i_wid / wid;
-			//m_point.y = m_point.y*i_hei / hei;
+			float zoom = 1 - 5 * ( ((float)m_nMagnify-1) / 10); //1.2 1.4 1.6 1.8 2.0 2.2
 			double x1 = m_point.x - (i_wid / 2)*zoom;
-			if (x1 < 0)
-			{
-				//x1 = 0;
-			}
 			double y1 = m_point.y - (i_hei / 2)*zoom;
-			if (y1 < 0)
-			{
-				//y1 = 0;
-			}
 			double x2 = m_point.x + (i_wid / 2)*zoom;
-			if (x2>i_wid)
-			{
-				//x2 = i_wid;
-			}
 			double y2 = m_point.y + (i_hei / 2)*zoom;
-			if (y2 > i_hei)
-			{
-				//y2 = i_hei;
-			}
-
 			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
-			//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, xxx, yyy, 0, 0, pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight());
-			//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, xxx, yyy, 0, 0, xx, yy);
-			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, xxx*m_nMagnify, yyy*m_nMagnify, SRCCOPY);
-			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, xxx, yyy, SRCCOPY);
-			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, 0, 0, zoom_xx, zoom_yy, SRCCOPY);
-			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, m_point.x - (i_wid) / 2 * (2 - m_nMagnify), m_point.y - i_hei*(2 - m_nMagnify) / 2, m_point.x + (i_wid) / 2 * (2 - m_nMagnify), m_point.y + i_hei*(2 - m_nMagnify) / 2, SRCCOPY);
-			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, SRCCOPY);
-			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, 0, 0, i_wid, i_hei);
-			//zoom = 1;
-			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, m_point.x -(i_wid)/ 2 * zoom, m_point.y - (i_hei) / 2 * zoom, m_point.x + (i_wid) / 2 * zoom, m_point.y + (i_hei) / 2 * zoom, SRCCOPY);
 		}
-		//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, this_rect.Width(), this_rect.Height(), SRCCOPY);
-		//DeleteObject(pDoc->m_Image);
-		//delete this_rect;
+
 		ReleaseDC(&dc);
 		ReleaseDC(pDC);
 	}
-	/*
-	mp_display_memory = new CDC();
-	mp_bitmap = new CBitmap();
-	GetClientRect(m_image_rect);
-
-	//*mp_bitmap = cBitmap;
-	CClientDC dc(this);
-	mp_display_memory->CreateCompatibleDC(pDC);
-	//mp_display_memory->CreateCompatibleDC(&dc);
-
-	mp_bitmap->CreateCompatibleBitmap(pDC, m_image_rect.Width(), m_image_rect.Height());
-	mp_old_bitmap = mp_display_memory->SelectObject(mp_bitmap);
-	mp_display_memory->Rectangle(0, 0, m_image_rect.Width(), m_image_rect.Height());
-	mp_display_memory->SelectObject(mp_old_bitmap);
-
-	mp_old_bitmap = mp_display_memory->SelectObject(mp_bitmap);
-	mp_display_memory->Rectangle(0, 0, 250, 250);
-	dc.BitBlt(0, 0, m_image_rect.Width(), m_image_rect.Height(), mp_display_memory, 0, 0, SRCCOPY);
-	mp_display_memory->SelectObject(mp_old_bitmap);
-	*/
 }
 
 	void CNewProject01View::OnDestroy()
 {
 	CFormView::OnDestroy();
 	mp_bitmap->DeleteObject();
-	mp_display_memory->DeleteDC();\
+	mp_display_memory->DeleteDC();
 	delete mp_bitmap;
 	delete mp_display_memory;
 	delete bmp;
@@ -384,7 +294,6 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	++m_nMagnify;
-	//zoom = zoom /2;
 	m_VectorRect.push_back(CRect(point.x,point.y,0,0));
 	p_point.x = point.x;
 	p_point.y= point.y;
@@ -403,7 +312,6 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	--m_nMagnify;
-	//zoom = zoom * 2;
 	m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
 	p_point.x = point.x;
 	p_point.y = point.y;

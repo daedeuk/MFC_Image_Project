@@ -183,6 +183,15 @@ BEGIN
     CONTROL         "",IDC_STATIC_DISP,"Static",SS_BLACKFRAME,0,0,7,7
 END
 
+IDD_DIALOG1 DIALOGEX 0, 0, 309, 176
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "확인",IDOK,198,155,50,14
+    PUSHBUTTON      "취소",IDCANCEL,252,155,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -245,6 +254,14 @@ BEGIN
         RIGHTMARGIN, 423
         TOPMARGIN, 7
         BOTTOMMARGIN, 296
+    END
+
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 302
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 169
     END
 END
 #endif    // APSTUDIO_INVOKED
