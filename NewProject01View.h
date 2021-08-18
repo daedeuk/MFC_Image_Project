@@ -20,13 +20,18 @@ protected: // serialization에서만 만들어집니다.
 	CNewProject01View();
 	DECLARE_DYNCREATE(CNewProject01View)
 public:
+	CRect this_rect;
 	CPoint p_point;
 	CPoint m_point;
 	CImage c_image;
-	float zoom;
+	double zoom;
 	int m_nMagnify;
 	vector<CRect> m_VectorRect;
 	vector<CString> m_VectorString;
+	double i_wid;
+	double i_hei;
+	double wid;
+	double hei;
 	/*
 	unsigned char *m_InImg; //bmp 파일의 이미지 내용 저장
 	unsigned char *m_OutImg; //bmp이미지 출력용 배열

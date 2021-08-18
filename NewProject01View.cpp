@@ -135,6 +135,7 @@ void CNewProject01View::OnImageLoadImage()
 		if (!pDoc->m_Image.IsNull())
 		{
 			m_nMagnify = 1;
+			wid, hei, i_wid, i_hei = 0;
 			m_point.x = pDoc->m_Image.GetWidth() / 2;
 			m_point.y = pDoc->m_Image.GetHeight() / 2;
 			pDoc->m_Image.Destroy();
@@ -181,21 +182,26 @@ void CNewProject01View::OnDraw(CDC* pDC)
 	{
 		CClientDC dc(this);
 		pDC = &dc;
-		CRect this_rect;
-		dc.GetClipBox(&this_rect);
-		double i_wid = pDoc->m_Image.GetWidth();
-		double i_hei = pDoc->m_Image.GetHeight();
-		SetStretchBltMode(pDC->m_hDC, HALFTONE);
-		double wid = this_rect.Width();
-		double hei = this_rect.Height();
-		wid = wid*i_wid / (i_wid + i_hei);
-		hei = wid*i_hei / (i_wid + i_hei);
+		CRect new_rect;
+		dc.GetClipBox(&new_rect);
+		if (1)
+		{
+			i_wid = pDoc->m_Image.GetWidth();
+			i_hei = pDoc->m_Image.GetHeight();
+			wid = new_rect.Width();
+			hei = new_rect.Height();
+			wid = wid*i_wid / (i_wid + i_hei);
+			hei = wid*i_hei / (i_wid + i_hei);
+		}
+		CRect this_rect(0, 0, wid, hei);
+
 		//확대 
+		SetStretchBltMode(pDC->m_hDC, HALFTONE);
 		if (m_nMagnify == 1)
 		{
 			m_point.x = pDoc->m_Image.GetWidth() / 2;
 			m_point.y = pDoc->m_Image.GetHeight() / 2;
-			float zoom = 1.2 - 2 * ((float)m_nMagnify / 10);
+			zoom = 1.2 - 2 * ((double)m_nMagnify / 10);
 			double x1 = m_point.x - (i_wid / 2)*zoom;
 			if (x1 < 0)
 			{
@@ -223,19 +229,25 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		{
 			//CRect this_rect(0, 0, (wid)*zoom, (hei)*zoom);
 			//float zoom = (10 - 3*(float)m_nMagnify) / 10;
-			float zoom = 1.2- 2*((float)m_nMagnify/10); //1 0.8 0.6 0.4
+			if (m_nMagnify<11)
+			{
+				zoom = 1.1 - ((double)m_nMagnify / 10); //1.0 0.9 0.8 ~~ 0.1까지
+			}
+			
+			else if (11<=m_nMagnify<19)
+			{
+				zoom = 0.19 - ((double)m_nMagnify / 100);                //0.08 0.07 0.06 0.05 0.04 0.03 0.02 0.01
+			}
+			else if (20 <= m_nMagnify<29)
+			{
+				zoom = 0.05 - 2*(double)m_nMagnify / 1000;							//-0.004 -0.0042 -0.0044 0.008 0.00
+			}
 			//p_point.x = m_point.x*wid / i_wid;
 			//p_point.y = m_point.y*hei / i_hei;
-			if (m_point.x > wid)
-			{
-				m_point.x = wid;
-			}
-			if (m_point.y > hei)
-			{
-				m_point.y = hei;
-			}
-			m_point.x = m_point.x*i_wid / wid;
-			m_point.y = m_point.y*i_hei / hei;
+
+			//m_point.x = m_point.x*i_wid / wid;
+			//m_point.y = m_point.y*i_hei / hei;
+			
 			double x1 = m_point.x - (i_wid / 2)*zoom;
 			if (x1 < 0)
 			{
@@ -269,7 +281,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		}
 		else if (m_nMagnify<1)
 		{
-			float zoom = 1 - 2 * ( ((float)m_nMagnify-1) / 10); //1.2 1.4 1.6 1.8 2.0
+			float zoom = 1 - 2 * ( ((float)m_nMagnify-1) / 10); //1.2 1.4 1.6 1.8 2.0 2.2
 			//p_point.x = m_point.x*wid / i_wid;
 			//p_point.y = m_point.y*hei / i_hei;
 			
@@ -284,8 +296,8 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			}
 			*/
 
-			m_point.x = m_point.x*i_wid / wid;
-			m_point.y = m_point.y*i_hei / hei;
+			//m_point.x = m_point.x*i_wid / wid;
+			//m_point.y = m_point.y*i_hei / hei;
 			double x1 = m_point.x - (i_wid / 2)*zoom;
 			if (x1 < 0)
 			{
@@ -372,11 +384,17 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	++m_nMagnify;
-	zoom = zoom /2;
+	//zoom = zoom /2;
 	m_VectorRect.push_back(CRect(point.x,point.y,0,0));
-	m_point.x = point.x;
-	m_point.y= point.y;
-	Invalidate(true);
+	p_point.x = point.x;
+	p_point.y= point.y;
+
+	if (i_wid != 0 && wid != 0)
+	{
+		m_point.x=p_point.x / wid*i_wid;
+		m_point.y=p_point.y / hei*i_hei;
+	}
+	Invalidate(false);
 	CFormView::OnLButtonDown(nFlags, point);
 }
 
@@ -385,10 +403,15 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	--m_nMagnify;
-	zoom = zoom * 2;
+	//zoom = zoom * 2;
 	m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
-	m_point.x = point.x;
-	m_point.y = point.y;
-	Invalidate(true);
+	p_point.x = point.x;
+	p_point.y = point.y;
+	if (i_wid != 0 && wid != 0)
+	{
+		m_point.x = p_point.x*i_wid/wid;
+		m_point.y = p_point.y*i_hei/hei;
+	}
+	Invalidate(false);
 	CFormView::OnRButtonDown(nFlags, point);
 }
