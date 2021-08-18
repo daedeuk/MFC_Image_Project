@@ -134,13 +134,13 @@ void CNewProject01View::OnImageLoadImage()
 		//HRESULT hr = c_image.Load(strPathname);
 		if (!pDoc->m_Image.IsNull())
 		{
+			m_nMagnify = 1;
+			m_point.x = pDoc->m_Image.GetWidth() / 2;
+			m_point.y = pDoc->m_Image.GetHeight() / 2;
 			pDoc->m_Image.Destroy();
 		}
 		pDoc->m_Image.Load(strPathname);
-		c_image.Load(strPathname);
-		m_nMagnify = 1;
-		m_point.x = pDoc->m_Image.GetWidth() / 2;
-		m_point.y = pDoc->m_Image.GetHeight() / 2;
+		//c_image.Load(strPathname);
 		//::ReleaseDC(hWnd, hdc);
 		Invalidate(true);
 		/*
