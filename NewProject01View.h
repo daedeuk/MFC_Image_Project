@@ -21,6 +21,7 @@ protected: // serialization에서만 만들어집니다.
 	CNewProject01View();
 	DECLARE_DYNCREATE(CNewProject01View)
 public:
+	Preview *pre;
 	CRect this_rect;
 	CPoint p_point;
 	CPoint m_point;

@@ -131,8 +131,6 @@ void CNewProject01View::OnImageLoadImage()
 		CString strPathname = dlg.GetPathName();
 		pDoc = GetDocument();
 		CFile f;
-		Preview *pre = new Preview;
-		pre->Create(IDD_DIALOG1);
 		//HRESULT hr = c_image.Load(strPathname);
 		if (!pDoc->m_Image.IsNull())
 		{
@@ -142,10 +140,14 @@ void CNewProject01View::OnImageLoadImage()
 			m_point.y = pDoc->m_Image.GetHeight() / 2;
 			pDoc->m_Image.Destroy();
 			pre->p_image.Destroy();
+			pre->DestroyWindow();
+			pre = NULL;
 			//pre->DestroyWindow();
 			//pre = NULL;
 		}
 		pDoc->m_Image.Load(strPathname);
+		pre = new Preview;
+		pre->Create(IDD_DIALOG1);
 		pre->p_image.Load(strPathname);
 		pre->ShowWindow(SW_SHOW);
 		//c_image.Load(strPathname);
