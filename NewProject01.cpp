@@ -155,6 +155,8 @@ public:
 	afx_msg void OnPaint();
 //	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+//	virtual void OnOK();
+//	virtual void OnCancel();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD)
@@ -214,3 +216,19 @@ int CAboutDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	return 0;
 }
+
+
+//void CAboutDlg::OnOK()
+//{
+//	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+//	CDialogEx::OnOK();
+//	if (mp_parent_wnd != NULL) mp_parent_wnd->PostMessage(LM_CLOSE_DLG_MESSAGE);
+//}
+
+
+//void CAboutDlg::OnCancel()
+//{
+//	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+//
+//	CDialogEx::OnCancel();
+//}

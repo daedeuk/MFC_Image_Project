@@ -12,7 +12,7 @@
 #include <iostream>
 #include <vector>
 #include "Preview.h"
-
+#include "PreviewDlg.h"
 using namespace std;
 
 class CNewProject01View : public CFormView
@@ -21,11 +21,13 @@ protected: // serialization에서만 만들어집니다.
 	CNewProject01View();
 	DECLARE_DYNCREATE(CNewProject01View)
 public:
+	CPreviewDlg *m_PreviewDlg;
 	Preview *pre;
 	CRect this_rect;
 	CPoint p_point;
 	CPoint m_point;
 	CImage c_image;
+	CImage m_image1;
 	double zoom;
 	int m_nMagnify;
 	vector<CRect> m_VectorRect;
@@ -34,6 +36,7 @@ public:
 	double i_hei;
 	double wid;
 	double hei;
+	double x1, x2, y1, y2;
 	/*
 	unsigned char *m_InImg; //bmp 파일의 이미지 내용 저장
 	unsigned char *m_OutImg; //bmp이미지 출력용 배열

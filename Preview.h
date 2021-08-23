@@ -7,8 +7,12 @@
 class Preview : public CDialogEx
 {
 	DECLARE_DYNAMIC(Preview)
-
+private:
+	CWnd *mp_parent_wnd;
 public:
+	void SetParentWindow(CWnd *parm_parent_wnd);
+
+	CRect R_Rect;
 	CBitmap	m_pBackBmp;
 	CDC		m_MemDC;
 	CDC		m_cDC;
@@ -28,4 +32,7 @@ protected:
 public:
 //	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnPaint();
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	virtual void OnOK();
+	virtual void OnCancel();
 };
