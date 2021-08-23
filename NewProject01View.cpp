@@ -149,6 +149,8 @@ void CNewProject01View::OnImageLoadImage()
 			pre->DestroyWindow();
 			pre = NULL;
 		}
+
+		c_image.Load(strPathname);
 		pDoc->m_Image.Load(strPathname);
 		//m_PreviewDlg = new CPreviewDlg();
 		//m_PreviewDlg->Create(IDD_DIALOG1, this);
@@ -193,35 +195,37 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		CRect new_rect;
 		GetClientRect(&new_rect);
 		//dc.GetClipBox(&new_rect);
-
 			i_wid = pDoc->m_Image.GetWidth();
 			i_hei = pDoc->m_Image.GetHeight();
-			wid = 0.7*new_rect.Width();
-			//hei = new_rect.Height();
-			//wid = wid*i_wid / (i_wid + i_hei);
-			//hei = wid*i_hei / (i_wid + i_hei);
-			hei = wid*i_hei/i_wid;
-
+			wid =0.8*new_rect.Width();
+			hei = 0.8*new_rect.Width();
+			if (((i_wid > i_hei) && ((i_wid / i_hei) > (wid / hei))) || ((i_wid < i_hei) && ((i_wid / i_hei)<(wid / hei))))
+			{
+				hei =(i_hei / i_wid)*wid;
+			}
+			else if (((i_wid>i_hei) && ((i_wid / i_hei) < (wid / hei))) || ((i_wid<i_hei) && ((i_wid / i_hei)>(wid / hei))))
+			{
+				wid = 0.8*(i_wid / i_hei)*hei;
+			}
 		CRect this_rect(0, 0, wid, hei);
 
 		//확대 
 		SetStretchBltMode(pDC->m_hDC, HALFTONE);
 		if (m_nMagnify == 1)
 		{
-			m_point.x = pDoc->m_Image.GetWidth() / 2;
-			m_point.y = pDoc->m_Image.GetHeight() / 2;
+			m_point.x = i_wid / 2;
+			m_point.y = i_hei / 2;
 			zoom = 1.2 - 2 * ((double)m_nMagnify / 10);
-			double x1 = m_point.x - (i_wid / 2)*zoom;
-			double y1 = m_point.y - (i_hei / 2)*zoom;
-			double x2 = m_point.x + (i_wid / 2)*zoom;
-			double y2 = m_point.y + (i_hei / 2)*zoom;
+			double x1 = m_point.x - (i_wid / 2)*zoom+1;
+			double y1 = m_point.y - (i_hei / 2)*zoom+1;
+			double x2 = m_point.x + (i_wid / 2)*zoom-1;
+			double y2 = m_point.y + (i_hei / 2)*zoom-1;
 			//m_image1.Draw(dc, 0, 0);
-			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
 			CRect xxyy(x1, y1, x2, y2);
 			pre->R_Rect = xxyy;
-			//pre->ShowWindow(SW_SHOW);
-			//pre->OnPaint();
-			//pDoc->m_Image.StretchBlt(cdc->m_hDC, 0, 0, pre->p_wid, pre->p_hei, 0,0,i_wid,i_hei,SRCCOPY);
+			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid-1, hei-1, x1, y1, x2, y2);
+			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0,wid, hei, x1, y1, x2, y2, SRCCOPY);
+			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
 		}
 		else if (m_nMagnify > 1)
 		{
@@ -240,30 +244,28 @@ void CNewProject01View::OnDraw(CDC* pDC)
 				zoom = 0.05 - 2*(double)m_nMagnify / 1000;							//-0.004 -0.0042 -0.0044 0.008 0.00
 			}
 			*/
-			
 			for (int i = 0; i < (m_nMagnify-1); i++)
 			{
 				zoom = zoom * 1 / 2;
 			}
-			
 			double x1 = m_point.x - (i_wid / 2)*zoom;
 			if (x1 < 0)
 			{
 				//double x3 = x1;
 				//x2 = x2 - x3;
-				x1 = 0;
+				x1 = 1;
 			}
 			double y1 = m_point.y - (i_hei / 2)*zoom;
 			if (y1 < 0)
 			{
 				//double y3 = y1;
 				//y2 = y2 - y1;
-				y1 = 0;
+				y1 = 1;
 			}
 			double x2 = m_point.x + (i_wid / 2)*zoom;
 			if (x2>i_wid)
 			{
-				x2 = i_wid;
+				x2 = i_wid-1;
 				//double x3 = i_wid*zoom;
 				//x1 = x1 - (x2 - x3);
 				//x2 = x3;
@@ -271,30 +273,38 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			double y2 = m_point.y + (i_hei / 2)*zoom;
 			if (y2 > i_hei)
 			{
-				y2 = i_hei;
+				y2 = i_hei-1;
 			}
 		
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, m_point.x - (i_wid/2)*zoom, m_point.y - (i_hei/2)*zoom, m_point.x + (i_wid/2)*zoom, m_point.y + (i_hei/2)*zoom,SRCCOPY);
-			
-			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
+		
+			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
+			//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2);
+
+			//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2);
 			CRect xxyy(x1, y1, x2, y2);
 			pre->R_Rect = xxyy;
-			//pre->ShowWindow(SW_SHOW);
-			//pre->OnPaint();
+			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid - 1, hei - 1, x1, y1, x2, y2);
+			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
+			//printf("%d", a);
 		}
 		else if (m_nMagnify<1)
 		{
-			float zoom = 1 - 5 * ( ((float)m_nMagnify-1) / 10); //1.2 1.4 1.6 1.8 2.0 2.2
+			
+			zoom = 1 - 2*( ((double)m_nMagnify-1) / 10); //1.2 1.4 1.6 1.8 2.0 2.2
+			//0일때 1.2 
 			double x1 = m_point.x - (i_wid / 2)*zoom;
 			double y1 = m_point.y - (i_hei / 2)*zoom;
 			double x2 = m_point.x + (i_wid / 2)*zoom;
 			double y2 = m_point.y + (i_hei / 2)*zoom;
 			
-			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
+			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
+			//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2);
 			CRect xxyy(x1, y1, x2, y2);
 			pre->R_Rect = xxyy;
-			//pre->ShowWindow(SW_SHOW);
-			//pre->OnPaint();
+			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid - 1, hei - 1, x1, y1, x2, y2);
+			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
+
 		}
 
 		ReleaseDC(&dc);
@@ -350,8 +360,7 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 	*/
 	if (point.x < wid&&point.y < hei)
 	{
-
-		if (nFlags&MK_SHIFT)
+		if (nFlags & MK_CONTROL && nFlags & MK_SHIFT)
 		{
 			m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
 			p_point.x = point.x;
@@ -371,8 +380,8 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 					p_point.y = point.y;
 					if (i_wid != 0 && wid != 0)
 					{
-						m_point.x = p_point.x / wid*(i_wid);
-						m_point.y = p_point.y / hei*(i_hei);
+						m_point.x = p_point.x / wid*(i_wid)*zoom;
+						m_point.y = p_point.y / hei*(i_hei)*zoom;
 					}
 			}
 			else if (m_nMagnify > 1)
@@ -383,6 +392,7 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 				//	if (m_point.x)
 				}
 			}
+			zoom = 1;
 			++m_nMagnify;
 			
 //			Preview::OnLButtonDown(nFlags, point);
@@ -396,35 +406,41 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	/*
-	if (nFlags&MK_SHIFT)
-	{
-		m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
-		p_point.x = point.x;
-		p_point.y = point.y;
-		if (i_wid != 0 && wid != 0)
-		{
-			m_point.x = p_point.x*(i_wid)*zoom / wid;
-			m_point.y = p_point.y*(i_hei)*zoom / hei;
-		}
-	}
-	else
-	{
-		--m_nMagnify;
-	}
-	*/
 	if (point.x < wid&&point.y < hei)
 	{
-		--m_nMagnify;
-		p_point.x = point.x;
-		p_point.y = point.y;
-		if (i_wid != 0 && wid != 0)
+		if (nFlags & MK_CONTROL && nFlags & MK_SHIFT)
 		{
-			m_point.x = p_point.x*(i_wid)*zoom / wid;
-			m_point.y = p_point.y*(i_hei)*zoom / hei;
+			m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
+			p_point.x = point.x;
+			p_point.y = point.y;
+			if (i_wid != 0 && wid != 0)
+			{
+				m_point.x = p_point.x / wid*(i_wid)*zoom;
+				m_point.y = p_point.y / hei*(i_hei)*zoom;
+			}
+		}
+		else
+		{
+			if (m_nMagnify == 1)
+			{
+				m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
+				p_point.x = point.x;
+				p_point.y = point.y;
+				if (i_wid != 0 && wid != 0)
+				{
+					m_point.x = p_point.x / wid*(i_wid)*zoom;
+					m_point.y = p_point.y / hei*(i_hei)*zoom;
+				}
+			}
+			else if (m_nMagnify < 1)
+			{
+				//m_point.x = pDoc->m_Image.GetWidth() / 2;
+				//m_point.y = pDoc->m_Image.GetHeight() / 2;
+			}
+			zoom = 1;
+			--m_nMagnify;
 		}
 	}
 	Invalidate(false);
 	CFormView::OnRButtonDown(nFlags, point);
 }
-

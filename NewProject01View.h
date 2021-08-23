@@ -28,6 +28,7 @@ public:
 	CPoint m_point;
 	CImage c_image;
 	CImage m_image1;
+	CImage d_image;
 	double zoom;
 	int m_nMagnify;
 	vector<CRect> m_VectorRect;
@@ -81,6 +82,12 @@ public:
 
 // 재정의입니다.
 public:
+	void DrawClipImage(HDC ah_dc, CImage *ap_image, POINT a_clip_start_pos, POINT a_clip_end_pos,
+		int a_use_fixed_pos = 0, int a_fixed_x = 0, int a_fixed_y = 0);
+	// ah_dc : 이미지를 출력할 DC의 핸들, ap_image : 부분 이미지를 사용할 CImage 객체의 주소
+	// a_clip_start_pos : 원본 이미지에서 부분 이미지가 시작될 좌표, a_clip_end_pos : 원본 이미지에서 부분 이미지가 끝날 좌표
+	// a_use_fixed_pos 값이 1이면 부분 이미지를 출력할때 특정 위치(a_fixed_x, a_fixed_y)를 지정, 0이면 사용 안함
+
 	virtual void OnDraw(CDC* pDC);
 	CRect CNewProject01View::Zoom_in_out(int m_nMagnify);
 
