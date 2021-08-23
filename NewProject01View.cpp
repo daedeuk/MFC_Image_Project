@@ -19,6 +19,8 @@
 #define new DEBUG_NEW
 #endif
 
+#define SHIFTPressed() ( 0x8000 ==(GetKeyState(VK_SHIFT) & 0x8000   ))
+
 
 // CNewProject01View
 
@@ -222,6 +224,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			//m_image1.Draw(dc, 0, 0);
 			CRect xxyy(x1, y1, x2, y2);
 			pre->R_Rect = xxyy;
+			zoom = 1;
 			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid-1, hei-1, x1, y1, x2, y2);
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0,wid, hei, x1, y1, x2, y2, SRCCOPY);
 			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
@@ -284,6 +287,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2);
 			CRect xxyy(x1, y1, x2, y2);
 			pre->R_Rect = xxyy;
+			zoom = 1;
 			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid - 1, hei - 1, x1, y1, x2, y2);
 
 			/*
@@ -309,6 +313,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			//pDoc->m_Image.Draw(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2);
 			CRect xxyy(x1, y1, x2, y2);
 			pre->R_Rect = xxyy;
+			zoom = 1;
 			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid - 1, hei - 1, x1, y1, x2, y2);
 			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
 			
@@ -344,38 +349,63 @@ void CNewProject01View::OnStnClickedStaticDisp()
 void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	/*
-	if (nFlags&MK_SHIFT)
-	{
-		m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
-
-		p_point.x = point.x;
-		p_point.y = point.y;
-		if (i_wid != 0 && wid != 0)
-		{
-			m_point.x = p_point.x / wid*(i_wid)*zoom;
-			m_point.y = p_point.y / hei*(i_hei)*zoom;
-		}
-	}
-	else
-	{
-		if (m_nMagnify < 6)
-		{
-			++m_nMagnify;
-		}
-	}
-	*/
 	if (point.x < wid&&point.y < hei)
 	{
-		if (nFlags & MK_CONTROL && nFlags & MK_SHIFT)
+		if (TRUE == SHIFTPressed())
 		{
 			m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
 			p_point.x = point.x;
 			p_point.y = point.y;
+			
+
+			/*
+			p_point.x = point.x / wid*(pre->R_Rect.Width());
+			p_point.x - pre->R_Rect.Width() / 2; //rect의 중심
+			
+			p_point.y = point.y / hei*(pre->R_Rect.Height());
+			p_point.y - pre->R_Rect.Height() / 2; //rect의 중심
+			*/
+
+
 			if (i_wid != 0 && wid != 0)
 			{
-				m_point.x = p_point.x / wid*(i_wid)*zoom;
-				m_point.y = p_point.y / hei*(i_hei)*zoom;
+				if (point.x < wid / 2)
+				{
+					m_point.x = m_point.x -(p_point.x / wid*(pre->R_Rect.Width()));
+					if (m_point.x< 0)
+					{
+						m_point.x = 0;
+					}
+					Invalidate(false);
+				}
+				else
+				{
+					m_point.x = m_point.x + p_point.x / wid*(pre->R_Rect.Width());
+					if (m_point.x + (pre->R_Rect.Width() / 2)>i_wid)
+					{
+						m_point.x = i_wid - pre->R_Rect.Width() / 2;
+					}
+					Invalidate(false);
+				}
+				if (point.y < hei / 2)
+				{
+					m_point.y = m_point.y -(p_point.y / hei*(pre->R_Rect.Height()));
+					if (m_point.y< 0)
+					{
+						m_point.y= 0;
+					}
+					Invalidate(false);
+				}
+				else
+				{
+					m_point.y = m_point.y + p_point.y / hei*(pre->R_Rect.Height());
+					if (m_point.y + (pre->R_Rect.Height() / 2)>i_hei)
+					{
+						m_point.y = i_hei - pre->R_Rect.Height() / 2;
+					}
+					Invalidate(false);
+				}
+
 			}
 		}
 		else
@@ -415,15 +445,53 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	if (point.x < wid&&point.y < hei)
 	{
-		if (nFlags & MK_CONTROL && nFlags & MK_SHIFT)
+		if (TRUE==SHIFTPressed())
 		{
 			m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
 			p_point.x = point.x;
 			p_point.y = point.y;
 			if (i_wid != 0 && wid != 0)
 			{
-				m_point.x = p_point.x / wid*(i_wid)*zoom;
-				m_point.y = p_point.y / hei*(i_hei)*zoom;
+				if (i_wid != 0 && wid != 0)
+				{
+					if (point.x < wid / 2)
+					{
+						m_point.x = m_point.x - p_point.x / wid*(pre->R_Rect.Width());
+						if (m_point.x - pre->R_Rect.Width() / 2 < 0)
+						{
+							m_point.x = 0;
+						}
+						
+						Invalidate(false);
+					}
+					else
+					{
+						m_point.x = m_point.x + p_point.x / wid*(pre->R_Rect.Width());
+						if (m_point.x + (pre->R_Rect.Width() / 2) > i_wid)
+						{
+							m_point.x = i_wid - pre->R_Rect.Width() / 2;
+						}
+						Invalidate(false);
+					}
+					if (point.y < hei / 2)
+					{
+						m_point.y = m_point.y - p_point.y / hei*(pre->R_Rect.Height());
+						if (m_point.y< 0)
+						{
+							m_point.y = 0;
+						}
+						Invalidate(false);
+					}
+					else
+					{
+						m_point.y = m_point.y + p_point.y / hei*(pre->R_Rect.Height());
+						if (m_point.y + (pre->R_Rect.Height() / 2) > i_hei)
+						{
+							m_point.y = i_hei - pre->R_Rect.Height() / 2;
+						}
+						Invalidate(false);
+					}
+				}
 			}
 		}
 		else
