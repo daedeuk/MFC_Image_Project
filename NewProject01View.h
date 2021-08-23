@@ -29,6 +29,7 @@ public:
 	CImage c_image;
 	CImage m_image1;
 	CImage d_image;
+	CImage temp_image;
 	double zoom;
 	int m_nMagnify;
 	vector<CRect> m_VectorRect;

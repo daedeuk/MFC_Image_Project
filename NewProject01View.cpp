@@ -98,7 +98,6 @@ CNewProject01Doc* CNewProject01View::GetDocument() const // 디버그되지 않은 버전
 }
 #endif //_DEBUG
 
-
 // CNewProject01View 메시지 처리기
 void CNewProject01View::OnImageLoadImage()
 {
@@ -197,8 +196,8 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		//dc.GetClipBox(&new_rect);
 			i_wid = pDoc->m_Image.GetWidth();
 			i_hei = pDoc->m_Image.GetHeight();
-			wid =0.8*new_rect.Width();
-			hei = 0.8*new_rect.Width();
+			wid = 0.6*new_rect.Width();
+			hei = 0.6*new_rect.Width();
 			if (((i_wid > i_hei) && ((i_wid / i_hei) > (wid / hei))) || ((i_wid < i_hei) && ((i_wid / i_hei)<(wid / hei))))
 			{
 				hei =(i_hei / i_wid)*wid;
@@ -225,7 +224,8 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			pre->R_Rect = xxyy;
 			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid-1, hei-1, x1, y1, x2, y2);
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0,wid, hei, x1, y1, x2, y2, SRCCOPY);
-			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
+			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
+			
 		}
 		else if (m_nMagnify > 1)
 		{
@@ -285,8 +285,15 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			CRect xxyy(x1, y1, x2, y2);
 			pre->R_Rect = xxyy;
 			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid - 1, hei - 1, x1, y1, x2, y2);
-			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
-			//printf("%d", a);
+
+			/*
+			temp_image.Create(x2 - x1, y2 - y1, pDoc->m_Image.GetBPP(), 0);
+			POINT start_pos = { x1, y1 }, end_pos = { x2, y2 };
+			//DrawClipImage(temp_image.GetDC(), &c_image, start_pos, end_pos, 1, 0, 0);
+			temp_image.ReleaseDC();
+			*/
+			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
+		
 		}
 		else if (m_nMagnify<1)
 		{
@@ -303,8 +310,8 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			CRect xxyy(x1, y1, x2, y2);
 			pre->R_Rect = xxyy;
 			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid - 1, hei - 1, x1, y1, x2, y2);
-			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2, y2, SRCCOPY);
-
+			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
+			
 		}
 
 		ReleaseDC(&dc);
