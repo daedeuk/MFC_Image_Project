@@ -150,8 +150,6 @@ void CNewProject01View::OnImageLoadImage()
 			pre->DestroyWindow();
 			pre = NULL;
 		}
-
-		c_image.Load(strPathname);
 		pDoc->m_Image.Load(strPathname);
 		//m_PreviewDlg = new CPreviewDlg();
 		//m_PreviewDlg->Create(IDD_DIALOG1, this);
