@@ -354,19 +354,13 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 			m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
 			p_point.x = point.x;
 			p_point.y = point.y;
-			
-
-			/*
-			p_point.x = point.x / wid*(pre->R_Rect.Width());
-			p_point.x - pre->R_Rect.Width() / 2; //rect의 중심
-			
-			p_point.y = point.y / hei*(pre->R_Rect.Height());
-			p_point.y - pre->R_Rect.Height() / 2; //rect의 중심
-			*/
-
 
 			if (i_wid != 0 && wid != 0)
 			{
+				m_point.x = p_point.x / wid * (pre->R_Rect.Width()) + (pre->R_Rect.TopLeft().x);
+				m_point.y = p_point.y / hei*  (pre->R_Rect.Height()) + (pre->R_Rect.TopLeft().y);
+				Invalidate(false);
+				/*
 				if (point.x < wid / 2)
 				{
 					m_point.x = m_point.x -(p_point.x / wid*(pre->R_Rect.Width()));
@@ -403,7 +397,7 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 					}
 					Invalidate(false);
 				}
-
+				*/
 			}
 		}
 		else
@@ -427,9 +421,11 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 				//	if (m_point.x)
 				}
 			}
-			zoom = 1;
-			++m_nMagnify;
-			
+			if (m_nMagnify < 7)
+			{
+				zoom = 1;
+				++m_nMagnify;
+			}
 //			Preview::OnLButtonDown(nFlags, point);
 		}
 	}
@@ -452,43 +448,9 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 			{
 				if (i_wid != 0 && wid != 0)
 				{
-					if (point.x < wid / 2)
-					{
-						m_point.x = m_point.x - p_point.x / wid*(pre->R_Rect.Width());
-						if (m_point.x - pre->R_Rect.Width() / 2 < 0)
-						{
-							m_point.x = 0;
-						}
-						
-						Invalidate(false);
-					}
-					else
-					{
-						m_point.x = m_point.x + p_point.x / wid*(pre->R_Rect.Width());
-						if (m_point.x + (pre->R_Rect.Width() / 2) > i_wid)
-						{
-							m_point.x = i_wid - pre->R_Rect.Width() / 2;
-						}
-						Invalidate(false);
-					}
-					if (point.y < hei / 2)
-					{
-						m_point.y = m_point.y - p_point.y / hei*(pre->R_Rect.Height());
-						if (m_point.y< 0)
-						{
-							m_point.y = 0;
-						}
-						Invalidate(false);
-					}
-					else
-					{
-						m_point.y = m_point.y + p_point.y / hei*(pre->R_Rect.Height());
-						if (m_point.y + (pre->R_Rect.Height() / 2) > i_hei)
-						{
-							m_point.y = i_hei - pre->R_Rect.Height() / 2;
-						}
-						Invalidate(false);
-					}
+					m_point.x =p_point.x / wid * (pre->R_Rect.Width()) + (pre->R_Rect.TopLeft().x);
+					m_point.y =p_point.y / hei*  (pre->R_Rect.Height()) + (pre->R_Rect.TopLeft().y);
+					Invalidate(false);
 				}
 			}
 		}
@@ -510,8 +472,11 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 				//m_point.x = pDoc->m_Image.GetWidth() / 2;
 				//m_point.y = pDoc->m_Image.GetHeight() / 2;
 			}
-			zoom = 1;
-			--m_nMagnify;
+			if (m_nMagnify>-6)
+			{
+				zoom = 1;
+				--m_nMagnify;
+			}
 		}
 	}
 	Invalidate(false);
