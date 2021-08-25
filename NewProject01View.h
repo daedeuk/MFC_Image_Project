@@ -25,6 +25,7 @@ protected: // serialization에서만 만들어집니다.
 	CNewProject01View();
 	DECLARE_DYNCREATE(CNewProject01View)
 public:
+	void CNewProject01View::OnImageResize();
 	unsigned char** inImageR = NULL;
 	unsigned char** inImageG = NULL;
 	unsigned char** inImageB = NULL;

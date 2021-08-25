@@ -187,19 +187,40 @@ void CNewProject01View::OnImageSaveImage()
 	if (dlg.DoModal() == IDOK){
 		CString SstrPathname = dlg.GetPathName();
 		
-		CClientDC h_dc(this);
+		
+		/*
+		CImage TempSourceImage;
+		CImage TempDestImage;
+		CRect TempTargetRect=pre->R_Rect;
+		CDC *pSourceDC = CDC::FromHandle(pDoc->m_Image.GetDC());
+		int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL);
+		TempDestImage.Create(wid, hei, BitPerPixel);
+		CDC*pDestDC = CDC::FromHandle(TempDestImage.GetDC());
+		if (!pSourceDC || !pDestDC)
+		{
+			return;
+		}
+		pDestDC->BitBlt(0, 0, TempTargetRect.Width(), TempTargetRect.Height(), pSourceDC, TempTargetRect.left, TempTargetRect.top, SRCCOPY);
+		TempDestImage.ReleaseDC();
+		TempSourceImage.ReleaseDC();
 
+		TempDestImage.Save(SstrPathname, ImageFormatBMP);
+		*/
+		
+		CClientDC h_dc(this);
 		//HDC h_dc = ::GetWindowDC(NULL);
 		CImage tips_image;
-
+		CDC *pSourceDC = CDC::FromHandle(pDoc->m_Image.GetDC());
+		int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL);
+		ReleaseDC(pSourceDC);
 		//int cx = ::GetSystemMetrics(SM_CXSCREEN);
 		//int cy = ::GetSystemMetrics(SM_CYSCREEN);
 		int color_depth = ::GetDeviceCaps(h_dc, BITSPIXEL);
-		tips_image.Create(wid, hei, color_depth, 0);
-
+		//tips_image.Create(wid, hei, color_depth, 0);
+		tips_image.Create(wid, hei, BitPerPixel, 0);
 		//tips_image.Create(wid, hei, 32, 0);
 		::BitBlt(tips_image.GetDC(), 0, 0, wid, hei, h_dc, 0, 0, SRCCOPY);
-		tips_image.Save(SstrPathname, ImageFormatBMP);;
+		tips_image.Save(SstrPathname, ImageFormatBMP);
 		::ReleaseDC(NULL, h_dc);
 		tips_image.ReleaseDC();
 	}
@@ -266,6 +287,18 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		SetStretchBltMode(pDC->m_hDC, HALFTONE);
 		if (m_nMagnify == 1)
 		{
+			/*
+			CImage TempSourceImage;
+			CImage TempDestImage;
+			CRect TempTargetRect = this_rect;
+
+			CDC *pSourceDC = CDC::FromHandle(pDoc->m_Image.GetDC());
+			int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL);
+			TempDestImage.Create(temptargetrect)
+			*/
+
+
+
 			m_point.x = i_wid / 2;
 			m_point.y = i_hei / 2;
 			zoom = 1.2 - 2 * ((double)m_nMagnify / 10);
@@ -280,7 +313,15 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid-1, hei-1, x1, y1, x2, y2);
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0,wid, hei, x1, y1, x2, y2, SRCCOPY);
 			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
-			
+
+			OnImageResize();
+			/*
+			if (!tips_image.IsNull())
+			{
+				tips_image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, 0, 0, wid, hei, SRCCOPY);
+			}
+			*/
+
 		}
 		else if (m_nMagnify > 1)
 		{
@@ -623,4 +664,23 @@ void CNewProject01View::OnImageErrosion()
 		Invalidate(false);
 }
 
-// CImageColorDoc ¸í·É
+void CNewProject01View::OnImageResize()
+{
+	CClientDC h_dc(this);
+	//HDC h_dc = ::GetWindowDC(NULL);
+	CImage tips_image;
+	CDC *pSourceDC = CDC::FromHandle(pDoc->m_Image.GetDC());
+	int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL);
+	ReleaseDC(pSourceDC);
+	//int cx = ::GetSystemMetrics(SM_CXSCREEN);
+	//int cy = ::GetSystemMetrics(SM_CYSCREEN);
+	int color_depth = ::GetDeviceCaps(h_dc, BITSPIXEL);
+	//tips_image.Create(wid, hei, color_depth, 0);
+	tips_image.Create(wid, hei, BitPerPixel, 0);
+	//tips_image.Create(wid, hei, 32, 0);
+	::BitBlt(tips_image.GetDC(), 0, 0, wid, hei, h_dc, 0, 0, SRCCOPY);
+	//tips_image.Save(SstrPathname, ImageFormatBMP);
+	::ReleaseDC(NULL, h_dc);
+	tips_image.ReleaseDC();
+	Invalidate(false);
+}
