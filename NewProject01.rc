@@ -133,6 +133,11 @@ BEGIN
     BEGIN
         MENUITEM "NewProject01 Á¤º¸(&A)...",      ID_APP_ABOUT
     END
+    POPUP "processing"
+    BEGIN
+        MENUITEM "errosion",                    ID_PROCESSING_ERROSION
+        MENUITEM "dilation",                    ID_PROCESSING_DILATION
+    END
 END
 
 

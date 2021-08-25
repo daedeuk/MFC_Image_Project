@@ -11,9 +11,7 @@
 
 #include "NewProject01Doc.h"
 #include "NewProject01View.h"
-
 #include <atlimage.h>
-
 #include "Preview.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,6 +28,7 @@ BEGIN_MESSAGE_MAP(CNewProject01View, CFormView)
 	ON_COMMAND(ID_FILE_OPEN, &CNewProject01View::OnImageLoadImage)
 	ON_UPDATE_COMMAND_UI(ID_FILE_OPEN, &CNewProject01View::OnUpdateImageLoadimage)
 	ON_COMMAND(ID_FILE_SAVE, &CNewProject01View::OnImageSaveImage)
+	ON_COMMAND(ID_PROCESSING_ERROSION, &CNewProject01View::OnImageErrosion)
 	ON_WM_DESTROY()
 	ON_STN_CLICKED(IDC_STATIC_DISP, &CNewProject01View::OnStnClickedStaticDisp)
 	ON_WM_LBUTTONDOWN()
@@ -99,6 +98,10 @@ CNewProject01Doc* CNewProject01View::GetDocument() const // 디버그되지 않은 버전
 	return (CNewProject01Doc*)m_pDocument;
 }
 #endif //_DEBUG
+
+
+
+
 
 // CNewProject01View 메시지 처리기
 void CNewProject01View::OnImageLoadImage()
@@ -200,6 +203,24 @@ void CNewProject01View::OnImageSaveImage()
 		::ReleaseDC(NULL, h_dc);
 		tips_image.ReleaseDC();
 	}
+}
+
+unsigned char** malloc2D(int h, int w) {
+	unsigned char** p;
+	p = (unsigned char**)malloc(h * sizeof(unsigned char*));
+	for (int i = 0; i < h; i++)
+		p[i] = (unsigned char*)malloc(w * sizeof(unsigned char));
+	return p;
+}
+
+
+void free2DImage(unsigned char** image, int h) {
+	if (image == NULL)
+		return;
+	for (int i = 0; i < h; i++)
+		free(image[i]);
+	free(image);
+	image = NULL;
 }
 
 void CNewProject01View::OnDraw(CDC* pDC)
@@ -520,3 +541,86 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 	CFormView::OnRButtonDown(nFlags, point);
 }
 
+void CNewProject01View::OnImageErrosion()
+{
+	// TODO: 여기에 구현 코드 추가.
+	/*
+	if (inImageR == NULL)
+	return;
+	*/
+	// 기존에 처리한 적이 있으면 일단 메모리 해제
+	inH = i_hei;
+	inW = i_wid;
+	free2DImage(inImageR, inH);
+	free2DImage(inImageG, inH);
+	free2DImage(inImageB, inH);
+	// 중요! 출력 영상 크기 --> 알고리즘에 따름
+	// 출력 메모리 할당.
+	inImageR = malloc2D(inH, inW);
+	inImageG = malloc2D(inH, inW);
+	inImageB = malloc2D(inH, inW);
+	COLORREF pixel; // 한 점(R,G,B)
+	for (int i = 0; i < inH; i++)
+	{
+		for (int k = 0; k < inW; k++) {
+			pixel = pDoc->m_Image.GetPixel(k, i);
+			inImageR[i][k] = (unsigned char)GetRValue(pixel);
+			inImageG[i][k] = (unsigned char)GetGValue(pixel);
+			inImageB[i][k] = (unsigned char)GetBValue(pixel);
+		}
+	}
+	free2DImage(outImageR, outH);
+	free2DImage(outImageG, outH);
+	free2DImage(outImageB, outH);
+	// 중요! 출력 영상 크기 --> 알고리즘에 따름
+	outH = inH;  outW = inW;
+	// 출력 메모리 할당.
+	outImageR = malloc2D(outH, outW);
+	outImageG = malloc2D(outH, outW);
+	outImageB = malloc2D(outH, outW);
+	temp_image.Create(i_wid, i_hei, 32, 0);
+	int mask[3][3] = { { -1, -1, -1 },
+	{ -1, 8, -1 },
+	{ -1, -1, -1 }
+	};
+	unsigned char minR = 255, minG = 255, minB = 255;
+	for (int i = 1; i < inH - 1; i++) {
+		for (int j = 1; j < inW - 1; j++) {
+			minR = 255, minG = 255, minB = 255;
+			for (int k = 0; k < 3; k++)
+			{
+				for (int m = 0; m < 3; m++)
+				{
+					if (minR > inImageR[i - 1 + k][j - 1 + m]) {
+						minR = inImageR[i - 1 + k][j - 1 + m];
+					}
+					if (minG > inImageG[i - 1 + k][j - 1 + m]) {
+						minG = inImageG[i - 1 + k][j - 1 + m];
+					}
+					if (minB > inImageB[i - 1 + k][j - 1 + m]) {
+						minB = inImageB[i - 1 + k][j - 1 + m];
+					}
+				}
+			}
+			outImageR[i][j] = minR;
+			outImageG[i][j] = minG;
+			outImageB[i][j] = minB;
+		}
+	}
+		int i, k;
+		unsigned char R, G, B;
+		for (i = 0; i < outH; i++) {
+			for (k = 0; k < outW; k++) {
+				R = outImageR[i][k];
+				G = outImageG[i][k];
+				B = outImageB[i][k];
+				//pDoc->m_Image.SetPixel(k, i, RGB(R, G, B));
+				temp_image.SetPixel(k, i, RGB(R, G, B));
+			}
+		}
+		pDoc->m_Image = temp_image;
+		//pre->p_image = temp_image;
+		Invalidate(false);
+}
+
+// CImageColorDoc 명령

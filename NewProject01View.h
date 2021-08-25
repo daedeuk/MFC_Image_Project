@@ -25,6 +25,16 @@ protected: // serialization에서만 만들어집니다.
 	CNewProject01View();
 	DECLARE_DYNCREATE(CNewProject01View)
 public:
+	unsigned char** inImageR = NULL;
+	unsigned char** inImageG = NULL;
+	unsigned char** inImageB = NULL;
+	unsigned char** outImageR = NULL;
+	unsigned char** outImageG = NULL;
+	unsigned char** outImageB = NULL;
+	int inH = 0;
+	int inW = 0;
+	int outH = 0;
+	int outW = 0;
 	CPreviewDlg *m_PreviewDlg;
 	Preview *pre;
 	CRect this_rect;
@@ -35,6 +45,7 @@ public:
 	CImage m_image1;
 	CImage d_image;
 	CImage temp_image;
+	CImage ero_image;
 	double zoom;
 	int m_nMagnify;
 	//vector<CRect> m_VectorRect;
@@ -121,6 +132,7 @@ public:
 	afx_msg void OnImageLoadImage();
 	afx_msg void OnUpdateImageLoadimage(CCmdUI *pCmdUI);
 	afx_msg void OnImageSaveImage();
+	afx_msg void OnImageErrosion();
 	afx_msg void OnDestroy();
 	afx_msg void OnStnClickedStaticDisp();
 	CStatic m_stDisp;

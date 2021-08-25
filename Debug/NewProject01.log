@@ -1,27 +1,30 @@
-﻿빌드 시작: 2021-08-25 오후 1:35:22
+﻿빌드 시작: 2021-08-25 오후 3:58:56
      1>2 노드의 "C:\Users\ddshin\Desktop\Git\NewProject\NewProject01.vcxproj" 프로젝트(Build 대상)입니다.
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\opencv\opencv\build\include /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\NewProject01.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt NewProject01View.cpp
          NewProject01View.cpp
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(195): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
      1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(198): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(242): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(248): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(249): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(256): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(261): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(319): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(330): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(345): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(349): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(393): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(394): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(445): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(446): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(486): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(487): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(501): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(502): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(201): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(263): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(269): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(270): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(277): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(282): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(340): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(351): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(366): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(370): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(414): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(415): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(466): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(467): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(507): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(508): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(522): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(523): warning C4244: '=' : 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(552): warning C4244: '=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(553): warning C4244: '=' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\ddshin\desktop\git\newproject\newproject01view.cpp(581): warning C4244: '인수' : 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\ddshin\Desktop\Git\NewProject\Debug\NewProject01.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\opencv\opencv\build\x64\vc15\lib opencv_world453d.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"C:\Users\ddshin\Desktop\Git\NewProject\Debug\NewProject01.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"wWinMainCRTStartup" /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\ddshin\Desktop\Git\NewProject\Debug\NewProject01.lib" /MACHINE:X86 Debug\NewProject01.res
          Debug\cdib.obj
@@ -42,4 +45,4 @@
 
 빌드했습니다.
 
-경과 시간: 00:00:01.54
+경과 시간: 00:00:00.71
