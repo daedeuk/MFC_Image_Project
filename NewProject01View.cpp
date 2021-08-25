@@ -29,7 +29,7 @@ IMPLEMENT_DYNCREATE(CNewProject01View, CFormView)
 BEGIN_MESSAGE_MAP(CNewProject01View, CFormView)
 	ON_COMMAND(ID_FILE_OPEN, &CNewProject01View::OnImageLoadImage)
 	ON_UPDATE_COMMAND_UI(ID_FILE_OPEN, &CNewProject01View::OnUpdateImageLoadimage)
-	//ON_COMMAND(ID_FILE_SAVE, &CnewProject01View::OnImageSaveImage)
+	ON_COMMAND(ID_FILE_SAVE, &CNewProject01View::OnImageSaveImage)
 	ON_WM_DESTROY()
 	ON_STN_CLICKED(IDC_STATIC_DISP, &CNewProject01View::OnStnClickedStaticDisp)
 	ON_WM_LBUTTONDOWN()
@@ -175,7 +175,31 @@ void CNewProject01View::OnUpdateImageLoadimage(CCmdUI *pCmdUI)
 
 void CNewProject01View::OnImageSaveImage()
 {
+	CString szFilter = L"Image files (*.bmp, *.jpg) | *.bmp; *.jpg; | All Files(*.*)|*.*||";
+	//CString szFilter = L"BMP Image (*.bmp) | *.bmp; | JPG Image (*.jpg) | *.jpg; | All Files(*.*)|*.*||";
+	
+	CFileDialog dlg(FALSE, L"bmp", L"*.bmp", OFN_HIDEREADONLY, szFilter);
+	//dlg.m_ofn.lpstrTitle = L"Save Image";
+	//dlg.m_ofn.lpstrInitialDir = L"C:\\";
+	if (dlg.DoModal() == IDOK){
+		CString SstrPathname = dlg.GetPathName();
+		
+		CClientDC h_dc(this);
 
+		//HDC h_dc = ::GetWindowDC(NULL);
+		CImage tips_image;
+
+		//int cx = ::GetSystemMetrics(SM_CXSCREEN);
+		//int cy = ::GetSystemMetrics(SM_CYSCREEN);
+		int color_depth = ::GetDeviceCaps(h_dc, BITSPIXEL);
+		tips_image.Create(wid, hei, color_depth, 0);
+
+		//tips_image.Create(wid, hei, 32, 0);
+		::BitBlt(tips_image.GetDC(), 0, 0, wid, hei, h_dc, 0, 0, SRCCOPY);
+		tips_image.Save(SstrPathname, ImageFormatBMP);;
+		::ReleaseDC(NULL, h_dc);
+		tips_image.ReleaseDC();
+	}
 }
 
 void CNewProject01View::OnDraw(CDC* pDC)
@@ -193,19 +217,28 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		pDC = &dc;
 		CRect new_rect;
 		GetClientRect(&new_rect);
-		//dc.GetClipBox(&new_rect);
 			i_wid = pDoc->m_Image.GetWidth();
 			i_hei = pDoc->m_Image.GetHeight();
-			wid = 0.6*new_rect.Width();
-			hei = 0.6*new_rect.Width();
+			wid = 0.5*new_rect.Width();
+			hei = 0.5*new_rect.Width();
+			if (i_wid > i_hei)
+			{
+				hei = wid*(i_hei / i_wid);
+			}
+			else if (i_hei > i_wid)
+			{
+				wid = hei*(i_wid / i_hei);
+			}
+			/*
 			if (((i_wid > i_hei) && ((i_wid / i_hei) > (wid / hei))) || ((i_wid < i_hei) && ((i_wid / i_hei)<(wid / hei))))
 			{
-				hei =(i_hei / i_wid)*wid;
+				hei = 0.8*(i_hei / i_wid)*wid;
 			}
 			else if (((i_wid>i_hei) && ((i_wid / i_hei) < (wid / hei))) || ((i_wid<i_hei) && ((i_wid / i_hei)>(wid / hei))))
 			{
 				wid = 0.8*(i_wid / i_hei)*hei;
 			}
+			*/
 		CRect this_rect(0, 0, wid, hei);
 
 		//확대 
@@ -300,8 +333,8 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		else if (m_nMagnify<1)
 		{
 			
-			zoom = 1 - 2*( ((double)m_nMagnify-1) / 10); //1.2 1.4 1.6 1.8 2.0 2.2
-			//0일때 1.2 
+			zoom = 1 - 5*( ((double)m_nMagnify-1) / 10); //1.2 1.4 1.6 1.8 2.0 2.2
+			//1.5 2.0 2.5 3.0 3.5
 			double x1 = m_point.x - (i_wid / 2)*zoom;
 			double y1 = m_point.y - (i_hei / 2)*zoom;
 			double x2 = m_point.x + (i_wid / 2)*zoom;
@@ -351,7 +384,7 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 	{
 		if (TRUE == SHIFTPressed())
 		{
-			m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
+			//m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
 			p_point.x = point.x;
 			p_point.y = point.y;
 
@@ -402,9 +435,9 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 		}
 		else
 		{
-			if (m_nMagnify==1 )
+			if (m_nMagnify == 0 || m_nMagnify == 1)
 			{
-				m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
+				//m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
 					p_point.x = point.x;
 					p_point.y = point.y;
 					if (i_wid != 0 && wid != 0)
@@ -413,6 +446,7 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 						m_point.y = p_point.y / hei*(i_hei)*zoom;
 					}
 			}
+			/*
 			else if (m_nMagnify > 1)
 			{
 				for (int i = 0; i < m_nMagnify; i++)
@@ -421,6 +455,7 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 				//	if (m_point.x)
 				}
 			}
+			*/
 			if (m_nMagnify < 7)
 			{
 				zoom = 1;
@@ -441,7 +476,7 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 	{
 		if (TRUE==SHIFTPressed())
 		{
-			m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
+			//m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
 			p_point.x = point.x;
 			p_point.y = point.y;
 			if (i_wid != 0 && wid != 0)
@@ -456,9 +491,9 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 		}
 		else
 		{
-			if (m_nMagnify == 1)
+			if (m_nMagnify==0 ||m_nMagnify == 1)
 			{
-				m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
+				//m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
 				p_point.x = point.x;
 				p_point.y = point.y;
 				if (i_wid != 0 && wid != 0)
@@ -467,11 +502,13 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 					m_point.y = p_point.y / hei*(i_hei)*zoom;
 				}
 			}
+			/*
 			else if (m_nMagnify < 1)
 			{
 				//m_point.x = pDoc->m_Image.GetWidth() / 2;
 				//m_point.y = pDoc->m_Image.GetHeight() / 2;
 			}
+			*/
 			if (m_nMagnify>-6)
 			{
 				zoom = 1;
@@ -482,3 +519,4 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 	Invalidate(false);
 	CFormView::OnRButtonDown(nFlags, point);
 }
+

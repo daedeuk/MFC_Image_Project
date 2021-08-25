@@ -13,7 +13,11 @@
 #include <vector>
 #include "Preview.h"
 #include "PreviewDlg.h"
-using namespace std;
+#include <gdiplus.h>
+using namespace Gdiplus;
+#pragma comment (lib,"gdiplus.lib")
+
+//using namespace std;
 
 class CNewProject01View : public CFormView
 {
@@ -26,14 +30,15 @@ public:
 	CRect this_rect;
 	CPoint p_point;
 	CPoint m_point;
+	CImage tips_image;
 	CImage c_image;
 	CImage m_image1;
 	CImage d_image;
 	CImage temp_image;
 	double zoom;
 	int m_nMagnify;
-	vector<CRect> m_VectorRect;
-	vector<CString> m_VectorString;
+	//vector<CRect> m_VectorRect;
+	//vector<CString> m_VectorString;
 	double i_wid;
 	double i_hei;
 	double wid;
@@ -122,6 +127,9 @@ public:
 	CStatic M_stDisp;
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickederrosion();
+	afx_msg void OnBnClickedDilation();
 };
 
 #ifndef _DEBUG  // NewProject01View.cpp의 디버그 버전
