@@ -13,15 +13,15 @@
 #include "NewProject01View.h"
 #include <atlimage.h>
 #include "Preview.h"
+
+#include "opencv2/opencv.hpp"
+using namespace cv;
+//#include "opencv2/opencv.hpp"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-#include <opencv2\opencv.hpp>
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <iostream>
 
 #define SHIFTPressed() ( 0x8000 ==(GetKeyState(VK_SHIFT) & 0x8000   ))
 
