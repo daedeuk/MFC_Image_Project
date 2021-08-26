@@ -14,10 +14,16 @@
 #include <atlimage.h>
 #include "Preview.h"
 
-#include "opencv2/opencv.hpp"
-using namespace cv;
+
 //#include "opencv2/opencv.hpp"
 
+#include <opencv2/core/core.hpp>
+
+#include <opencv2/imgproc/imgproc.hpp>
+
+#include <opencv2/highgui/highgui.hpp>
+
+using namespace cv;
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -160,6 +166,7 @@ void CNewProject01View::OnImageLoadImage()
 			pre = NULL;
 		}
 		pDoc->m_Image.Load(strPathname);
+		Mat image;
 		//m_PreviewDlg = new CPreviewDlg();
 		//m_PreviewDlg->Create(IDD_DIALOG1, this);
 		//m_PreviewDlg->ShowWindow(SW_SHOW);
