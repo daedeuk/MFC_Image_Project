@@ -122,12 +122,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cdib.cpp" />
-    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="Image.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="ImageFrame.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="NewProject01.cpp" />
     <ClCompile Include="NewProject01Doc.cpp" />
-    <ClCompile Include="NewProject01View.cpp" />
+    <ClCompile Include="NewProject01View.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="PointFloat.cpp" />
     <ClCompile Include="Preview.cpp" />
     <ClCompile Include="PreviewDlg.cpp" />

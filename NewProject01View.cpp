@@ -157,7 +157,24 @@ void CNewProject01View::OnImageLoadImage()
 		//m_PreviewDlg = new CPreviewDlg();
 		//m_PreviewDlg->Create(IDD_DIALOG1, this);
 		//m_PreviewDlg->ShowWindow(SW_SHOW);
-		
+
+		//gray scale
+		/*
+		register int width = pDoc->m_Image.GetWidth();
+		register int height = pDoc->m_Image.GetHeight();
+		COLORREF rgb;
+		for (int y = 0; y < height; y++)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				rgb = pDoc->m_Image.GetPixel(x, y);
+				//RGB2GRAY(rgb);
+				
+				//pDoc->m_Image.SetPixel(x, y, rgb);
+			}
+		}
+		*/
+
 		pre = new Preview;
 		pre->Create(IDD_DIALOG1, this);
 		pre->p_image.Load(strPathname);
@@ -178,16 +195,11 @@ void CNewProject01View::OnUpdateImageLoadimage(CCmdUI *pCmdUI)
 
 void CNewProject01View::OnImageSaveImage()
 {
-	CString szFilter = L"Image files (*.bmp, *.jpg) | *.bmp; *.jpg; | All Files(*.*)|*.*||";
-	//CString szFilter = L"BMP Image (*.bmp) | *.bmp; | JPG Image (*.jpg) | *.jpg; | All Files(*.*)|*.*||";
-	
+	//CString szFilter = L"Image files (*.bmp, *.jpg) | *.bmp; *.jpg; | All Files(*.*)|*.*||";
+	CString szFilter = L"BMP Image (*.bmp) | *.bmp; | All Files(*.*)|*.*||";
 	CFileDialog dlg(FALSE, L"bmp", L"*.bmp", OFN_HIDEREADONLY, szFilter);
-	//dlg.m_ofn.lpstrTitle = L"Save Image";
-	//dlg.m_ofn.lpstrInitialDir = L"C:\\";
 	if (dlg.DoModal() == IDOK){
 		CString SstrPathname = dlg.GetPathName();
-		
-		
 		/*
 		CImage TempSourceImage;
 		CImage TempDestImage;
@@ -207,21 +219,23 @@ void CNewProject01View::OnImageSaveImage()
 		TempDestImage.Save(SstrPathname, ImageFormatBMP);
 		*/
 		
-		CClientDC h_dc(this);
-		//HDC h_dc = ::GetWindowDC(NULL);
+		//CClientDC h_dc(this);
+//HDC h_dc = ::GetWindowDC(NULL);
 		CImage tips_image;
 		CDC *pSourceDC = CDC::FromHandle(pDoc->m_Image.GetDC());
 		int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL);
 		ReleaseDC(pSourceDC);
-		//int cx = ::GetSystemMetrics(SM_CXSCREEN);
-		//int cy = ::GetSystemMetrics(SM_CYSCREEN);
-		int color_depth = ::GetDeviceCaps(h_dc, BITSPIXEL);
-		//tips_image.Create(wid, hei, color_depth, 0);
 		tips_image.Create(wid, hei, BitPerPixel, 0);
+		CDC* pDestDC = CDC::FromHandle(tips_image.GetDC());
 		//tips_image.Create(wid, hei, 32, 0);
-		::BitBlt(tips_image.GetDC(), 0, 0, wid, hei, h_dc, 0, 0, SRCCOPY);
+		SetStretchBltMode(pDestDC->m_hDC, HALFTONE);
+		pDestDC->StretchBlt(0, 0, wid, hei, pSourceDC, pre->R_Rect.TopLeft().x, pre->R_Rect.TopLeft().y,
+			pre->R_Rect.BottomRight().x - pre->R_Rect.TopLeft().x, pre->R_Rect.BottomRight().y - pre->R_Rect.TopLeft().y,
+			SRCCOPY);
+		//::BitBlt(tips_image.GetDC(), 0, 0, wid, hei, h_dc, 0, 0, SRCCOPY);
 		tips_image.Save(SstrPathname, ImageFormatBMP);
-		::ReleaseDC(NULL, h_dc);
+		//::ReleaseDC(NULL, h_dc);
+		pDoc->m_Image.ReleaseDC();
 		tips_image.ReleaseDC();
 	}
 }
@@ -297,8 +311,6 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			TempDestImage.Create(temptargetrect)
 			*/
 
-
-
 			m_point.x = i_wid / 2;
 			m_point.y = i_hei / 2;
 			zoom = 1.2 - 2 * ((double)m_nMagnify / 10);
@@ -314,7 +326,9 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0,wid, hei, x1, y1, x2, y2, SRCCOPY);
 			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
 
-			OnImageResize();
+			//OnImageResize();
+
+
 			/*
 			if (!tips_image.IsNull())
 			{
@@ -584,7 +598,7 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 
 void CNewProject01View::OnImageErrosion()
 {
-	// TODO: 여기에 구현 코드 추가.
+	// TODO: 여기에 구현 코드 추가.r
 	/*
 	if (inImageR == NULL)
 	return;
@@ -648,39 +662,52 @@ void CNewProject01View::OnImageErrosion()
 			outImageB[i][j] = minB;
 		}
 	}
+	
 		int i, k;
 		unsigned char R, G, B;
 		for (i = 0; i < outH; i++) {
 			for (k = 0; k < outW; k++) {
 				R = outImageR[i][k];
+
 				G = outImageG[i][k];
 				B = outImageB[i][k];
+
 				//pDoc->m_Image.SetPixel(k, i, RGB(R, G, B));
-				temp_image.SetPixel(k, i, RGB(R, G, B));
+				temp_image.SetPixel(k, i, RGB(R, R, R));
 			}
 		}
 		pDoc->m_Image = temp_image;
-		//pre->p_image = temp_image;
+	
+
+		pre->p_image = temp_image;
 		Invalidate(false);
 }
 
 void CNewProject01View::OnImageResize()
 {
-	CClientDC h_dc(this);
+	//CClientDC h_dc(this);
 	//HDC h_dc = ::GetWindowDC(NULL);
-	CImage tips_image;
+	CImage resize_image;
 	CDC *pSourceDC = CDC::FromHandle(pDoc->m_Image.GetDC());
+
 	int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL);
 	ReleaseDC(pSourceDC);
 	//int cx = ::GetSystemMetrics(SM_CXSCREEN);
 	//int cy = ::GetSystemMetrics(SM_CYSCREEN);
-	int color_depth = ::GetDeviceCaps(h_dc, BITSPIXEL);
+	//int color_depth = ::GetDeviceCaps(h_dc, BITSPIXEL);
 	//tips_image.Create(wid, hei, color_depth, 0);
 	tips_image.Create(wid, hei, BitPerPixel, 0);
 	//tips_image.Create(wid, hei, 32, 0);
-	::BitBlt(tips_image.GetDC(), 0, 0, wid, hei, h_dc, 0, 0, SRCCOPY);
+	//::BitBlt(tips_image.GetDC(), 0, 0, wid, hei, h_dc, 0, 0, SRCCOPY);
 	//tips_image.Save(SstrPathname, ImageFormatBMP);
-	::ReleaseDC(NULL, h_dc);
+	//::ReleaseDC(NULL, h_dc);
 	tips_image.ReleaseDC();
 	Invalidate(false);
+}
+
+void CNewProject01View::RGB2GRAY(COLORREF& rgb)
+{
+	unsigned char grayColor = ((GetRValue(rgb)*0.3) + (GetRValue(rgb)*0.59) + (GetBValue(rgb)*0.11));
+	rgb = RGB(grayColor, grayColor, grayColor);
+
 }
