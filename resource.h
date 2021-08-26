@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by NewProject01.rc
+// Microsoft Visual C++에서 생성한 포함 파일입니다.
+// NewProject01.rc에서 사용되고 있습니다.
 //
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
@@ -11,6 +11,7 @@
 #define IDC_MY_PICTURE                  1000
 #define IDC_STATIC_DISP                 1001
 #define errosion                        1002
+#define IDC_PC_VIEW                     1004
 #define ID_PROCESSING_ERROSION          32771
 #define ID_PROCESSING_DILATION          32772
 
@@ -20,7 +21,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        312
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_CONTROL_VALUE         1005
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

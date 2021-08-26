@@ -14,8 +14,15 @@
 #include "Preview.h"
 #include "PreviewDlg.h"
 #include <gdiplus.h>
-using namespace Gdiplus;
-#pragma comment (lib,"gdiplus.lib")
+//using namespace Gdiplus;
+//#pragma comment (lib,"gdiplus.lib")
+
+#include <opencv2/core/core.hpp>
+
+#include <opencv2/imgproc/imgproc.hpp>
+
+#include <opencv2/highgui/highgui.hpp>
+
 
 //using namespace std;
 
@@ -25,6 +32,10 @@ protected: // serialization에서만 만들어집니다.
 	CNewProject01View();
 	DECLARE_DYNCREATE(CNewProject01View)
 public:
+	BITMAPINFO *m_pBitmapInfo;
+	cv::Mat m_matImage;
+	void CreateBitmapInfo(int w, int h, int bpp);
+	void DrawImage();
 	void CNewProject01View::OnImageResize();
 	void CNewProject01View::RGB2GRAY(COLORREF& rgb);
 	unsigned char** inImageR = NULL;

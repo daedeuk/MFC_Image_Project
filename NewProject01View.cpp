@@ -17,13 +17,6 @@
 
 //#include "opencv2/opencv.hpp"
 
-#include <opencv2/core/core.hpp>
-
-#include <opencv2/imgproc/imgproc.hpp>
-
-#include <opencv2/highgui/highgui.hpp>
-
-using namespace cv;
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -165,8 +158,41 @@ void CNewProject01View::OnImageLoadImage()
 			pre->DestroyWindow();
 			pre = NULL;
 		}
+		CT2CA pszString(strPathname);
+		std::string strPath(pszString);
+		cv::Mat image = cv::imread(strPath);
+		
+		
+		//cv::namedWindow("Image");
+		//cv::imshow("Image", image);
+		
+		cv::Mat eroded;
+		cv::erode(image, eroded, cv::Mat());
+		cv::namedWindow("Eroded Image");
+		cv::imshow("Eroded Image", eroded);
+		
+		/*
+		//팽창
+		cv::Mat dilated;
+		cv::dilate(image, dilated, cv::Mat());
+		//팽창된 연상을 띄워보기
+		cv::namedWindow("Dilated Image");
+		cv::imshow("Dilated Image", dilated);
+		*/
+		//영상을 세 번 침식시키기.
+		cv::erode(image, eroded, cv::Mat(), cv::Point(-1, -1), 3);
+		cv::namedWindow("Eroded Image (3 times)");
+		cv::imshow("Eroded Image (3 times)", eroded);
+		
+		
+		/*
+		CreateBitmapInfo(m_matImage.cols, m_matImage.rows, m_matImage.channels() * 8);
+		DrawImage();
+		*/
+
+
 		pDoc->m_Image.Load(strPathname);
-		Mat image;
+		
 		//m_PreviewDlg = new CPreviewDlg();
 		//m_PreviewDlg->Create(IDD_DIALOG1, this);
 		//m_PreviewDlg->ShowWindow(SW_SHOW);
@@ -242,11 +268,12 @@ void CNewProject01View::OnImageSaveImage()
 		CDC* pDestDC = CDC::FromHandle(tips_image.GetDC());
 		//tips_image.Create(wid, hei, 32, 0);
 		SetStretchBltMode(pDestDC->m_hDC, HALFTONE);
+		//SetStretchBltMode(pDestDC->m_hDC, COLORONCOLOR);
 		pDestDC->StretchBlt(0, 0, wid, hei, pSourceDC, pre->R_Rect.TopLeft().x, pre->R_Rect.TopLeft().y,
 			pre->R_Rect.BottomRight().x - pre->R_Rect.TopLeft().x, pre->R_Rect.BottomRight().y - pre->R_Rect.TopLeft().y,
 			SRCCOPY);
 		//::BitBlt(tips_image.GetDC(), 0, 0, wid, hei, h_dc, 0, 0, SRCCOPY);
-		tips_image.Save(SstrPathname, ImageFormatBMP);
+		tips_image.Save(SstrPathname, Gdiplus::ImageFormatBMP);
 		//::ReleaseDC(NULL, h_dc);
 		pDoc->m_Image.ReleaseDC();
 		tips_image.ReleaseDC();
@@ -312,6 +339,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 
 		//확대 
 		SetStretchBltMode(pDC->m_hDC, HALFTONE);
+		//SetStretchBltMode(pDC->m_hDC, COLORONCOLOR);
 		if (m_nMagnify == 1)
 		{
 			/*
@@ -723,9 +751,11 @@ void CNewProject01View::OnImageResize()
 	Invalidate(false);
 }
 
+/*
 void CNewProject01View::RGB2GRAY(COLORREF& rgb)
 {
 	unsigned char grayColor = ((GetRValue(rgb)*0.3) + (GetRValue(rgb)*0.59) + (GetBValue(rgb)*0.11));
 	rgb = RGB(grayColor, grayColor, grayColor);
 
 }
+*/
