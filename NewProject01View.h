@@ -33,6 +33,7 @@ protected: // serialization에서만 만들어집니다.
 	DECLARE_DYNCREATE(CNewProject01View)
 public:
 	BITMAPINFO *m_pBitmapInfo;
+	cv::Mat image;
 	cv::Mat m_matImage;
 	void CreateBitmapInfo(int w, int h, int bpp);
 	void DrawImage();

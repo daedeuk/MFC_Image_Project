@@ -160,8 +160,9 @@ void CNewProject01View::OnImageLoadImage()
 		}
 		CT2CA pszString(strPathname);
 		std::string strPath(pszString);
-		cv::Mat image = cv::imread(strPath);
-		
+		image = cv::imread(strPath);
+		CreateBitmapInfo(image.cols, image.rows, image.channels() * 8);
+
 		
 		//cv::namedWindow("Image");
 		//cv::imshow("Image", image);
@@ -365,7 +366,16 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			zoom = 1;
 			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid-1, hei-1, x1, y1, x2, y2);
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0,wid, hei, x1, y1, x2, y2, SRCCOPY);
-			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
+			
+			
+			
+			//StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, 0,0,image.cols, image.rows, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
+
+
+
+
 
 			//CT2CA pszSTring(strPathname);
 			//std::string strPath(pszSTring);
@@ -449,7 +459,9 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			//DrawClipImage(temp_image.GetDC(), &c_image, start_pos, end_pos, 1, 0, 0);
 			temp_image.ReleaseDC();
 			*/
-			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
+
+			StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2 - x1, y2 - y1, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
 		
 		}
 		else if (m_nMagnify<1)
@@ -468,7 +480,10 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			pre->R_Rect = xxyy;
 			zoom = 1;
 			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid - 1, hei - 1, x1, y1, x2, y2);
-			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
+
+
+			StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2 - x1, y2 - y1, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
 			
 		}
 
@@ -759,3 +774,42 @@ void CNewProject01View::RGB2GRAY(COLORREF& rgb)
 
 }
 */
+
+
+void CNewProject01View::CreateBitmapInfo(int w, int h, int bpp)
+{
+	if (m_pBitmapInfo != NULL)
+	{
+		delete m_pBitmapInfo;
+		m_pBitmapInfo = NULL;
+	}
+
+	if (bpp == 8)
+		m_pBitmapInfo = (BITMAPINFO *) new BYTE[sizeof(BITMAPINFO)+255 * sizeof(RGBQUAD)];
+	else // 24 or 32bit
+		m_pBitmapInfo = (BITMAPINFO *) new BYTE[sizeof(BITMAPINFO)];
+
+	m_pBitmapInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	m_pBitmapInfo->bmiHeader.biPlanes = 1;
+	m_pBitmapInfo->bmiHeader.biBitCount = bpp;
+	m_pBitmapInfo->bmiHeader.biCompression = BI_RGB;
+	m_pBitmapInfo->bmiHeader.biSizeImage = 0;
+	m_pBitmapInfo->bmiHeader.biXPelsPerMeter = 0;
+	m_pBitmapInfo->bmiHeader.biYPelsPerMeter = 0;
+	m_pBitmapInfo->bmiHeader.biClrUsed = 0;
+	m_pBitmapInfo->bmiHeader.biClrImportant = 0;
+
+	if (bpp == 8)
+	{
+		for (int i = 0; i < 256; i++)
+		{
+			m_pBitmapInfo->bmiColors[i].rgbBlue = (BYTE)i;
+			m_pBitmapInfo->bmiColors[i].rgbGreen = (BYTE)i;
+			m_pBitmapInfo->bmiColors[i].rgbRed = (BYTE)i;
+			m_pBitmapInfo->bmiColors[i].rgbReserved = 0;
+		}
+	}
+
+	m_pBitmapInfo->bmiHeader.biWidth = w;
+	m_pBitmapInfo->bmiHeader.biHeight = -h;
+}
