@@ -17,6 +17,12 @@
 #define new DEBUG_NEW
 #endif
 
+#include <opencv2\opencv.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <iostream>
+
 #define SHIFTPressed() ( 0x8000 ==(GetKeyState(VK_SHIFT) & 0x8000   ))
 
 
@@ -275,8 +281,8 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		GetClientRect(&new_rect);
 			i_wid = pDoc->m_Image.GetWidth();
 			i_hei = pDoc->m_Image.GetHeight();
-			wid = 0.5*new_rect.Width();
-			hei = 0.5*new_rect.Width();
+			wid = 0.4*new_rect.Width();
+			hei = 0.4*new_rect.Width();
 			if (i_wid > i_hei)
 			{
 				hei = wid*(i_hei / i_wid);
@@ -326,6 +332,11 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0,wid, hei, x1, y1, x2, y2, SRCCOPY);
 			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
 
+			//CT2CA pszSTring(strPathname);
+			//std::string strPath(pszSTring);
+			//cv::Mat image = cv::imread(strPath);
+			//std::string s((LPCTSTR)strPathname);
+			//cv::Mat image = cv::imread(std::string s((LPCTSTR)strPathname);
 			//OnImageResize();
 
 
