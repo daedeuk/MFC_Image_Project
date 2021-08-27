@@ -31,9 +31,12 @@ protected: // serialization에서만 만들어집니다.
 	CNewProject01View();
 	DECLARE_DYNCREATE(CNewProject01View)
 public:
+	unsigned char** CNewProject01View::malloc2D(int h, int w);
+	void CNewProject01View::free2DImage(unsigned char** image, int h);
+
 	BITMAPINFO *m_pBitmapInfo;
-	cv::Mat image;
-	cv::Mat m_matImage;
+	void CNewProject01View::PointColor(CImage *image, int x, int y, COLORREF c, int m_nBitDepth);
+	COLORREF CNewProject01View::GetPointColor(CImage *image, int x, int y);
 	void CreateBitmapInfo(int w, int h, int bpp);
 	HBITMAP m_hbitmap;
 	void TWAPI_CopyBitmap(CImage *ap_image, HBITMAP ah_bitmap);
