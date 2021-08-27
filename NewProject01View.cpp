@@ -630,7 +630,8 @@ void CNewProject01View::OnImageErrosion()
 	for (int i = 0; i < inH; i++)
 	{
 		for (int k = 0; k < inW; k++) {
-			memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k,i), imgBPP);
+			//memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k,i), imgBPP);
+			memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k, i), imgBPP);
 			//pixel = GetPointColor(&(pDoc->m_Image), k, i);
 			//pixel = pDoc->m_Image.GetPixel(k, i);
 			inImageR[i][k] = (unsigned char)GetRValue(pixel);
@@ -681,23 +682,26 @@ void CNewProject01View::OnImageErrosion()
 		unsigned char R, G, B;
 		for (i = 0; i < outH; i++) {
 			for (k = 0; k < outW; k++) {
+				COLORREF pixel;
 				R = outImageR[i][k];
 				G = outImageG[i][k];
 				B = outImageB[i][k];
+				pixel = RGB(R, G, B);
+				memcpy(pDoc->m_Image.GetPixelAddress(k, i), &pixel, imgBPP);
 				//pDoc->m_Image.SetPixel(k, i, RGB(R, G, B));
 				//PointColor(&temp_image, k, i, RGB(R, G, B), temp_image.GetBPP()/3);
-				PointColor(&temp_image, k, i, RGB(R, G, B), 16);
+				//PointColor(&temp_image, k, i, RGB(R, G, B), 16);
+				
 				//temp_image.SetPixel(k, i, RGB(R, R, R));
 			}
 		}
-		pDoc->m_Image.Destroy();
+		//pDoc->m_Image.Destroy();
 		//pDoc->m_Image.Create(temp_image.GetWidth(), temp_image.GetHeight(), temp_image.GetBPP()/3);
-		pDoc->m_Image.Create(temp_image.GetWidth(), temp_image.GetHeight(), 16);
-		pDoc->m_Image = temp_image;
-		pre->p_image.Destroy();
-		//pre->p_image.Create(temp_image.GetWidth(), temp_image.GetHeight(), temp_image.GetBPP()/3);
-		pre->p_image.Create(temp_image.GetWidth(), temp_image.GetHeight(), 16);
-		pre->p_image = temp_image;
+		//pDoc->m_Image.Create(temp_image.GetWidth(), temp_image.GetHeight(), 16);
+		//pDoc->m_Image = temp_image;
+		//pre->p_image.Destroy();
+		//pre->p_image.Create(pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight(), imgBPP);
+		pre->p_image = pDoc->m_Image;
 		Invalidate(false);
 }
 
