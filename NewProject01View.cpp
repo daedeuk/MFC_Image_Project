@@ -12,8 +12,6 @@
 #include "NewProject01Doc.h"
 #include "NewProject01View.h"
 #include <atlimage.h>
-#include "Preview.h"
-
 
 //#include "opencv2/opencv.hpp"
 
@@ -289,6 +287,13 @@ void CNewProject01View::OnDraw(CDC* pDC)
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 	if (!pDoc->m_Image.IsNull())
 	{
+		if (pre->movepoint.x != -1 && pre->movepoint.y != -1)
+		{
+			m_point.x = pre->movepoint.x;
+			m_point.y = pre->movepoint.y;
+			pre->movepoint.x = -1;
+			pre->movepoint.y = -1;
+		}
 		/*
 		CFile f;
 		BITMAPFILEHEADER bmfh;
@@ -860,3 +865,10 @@ void TWAPI_CopyBitmap(CImage *ap_image, HBITMAP ah_bitmap)
 	DeleteDC(h_dc);             // '비트 패턴'에 사용하기 위해 생성한 DC 제거
 
 */
+
+void CNewProject01View::pointmove(CPoint movepoint)
+{
+	m_point.x = movepoint.x;
+	m_point.y = movepoint.y;
+	return;
+}

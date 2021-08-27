@@ -12,7 +12,6 @@
 #include <iostream>
 #include <vector>
 #include "Preview.h"
-#include "PreviewDlg.h"
 #include <gdiplus.h>
 //using namespace Gdiplus;
 //#pragma comment (lib,"gdiplus.lib")
@@ -41,6 +40,7 @@ public:
 	void DrawImage();
 	void CNewProject01View::OnImageResize();
 	void CNewProject01View::RGB2GRAY(COLORREF& rgb);
+	void CNewProject01View::pointmove(CPoint movepoint);
 	unsigned char** inImageR = NULL;
 	unsigned char** inImageG = NULL;
 	unsigned char** inImageB = NULL;
@@ -51,7 +51,6 @@ public:
 	int inW = 0;
 	int outH = 0;
 	int outW = 0;
-	CPreviewDlg *m_PreviewDlg;
 	Preview *pre;
 	CRect this_rect;
 	CPoint p_point;
