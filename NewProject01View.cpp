@@ -142,7 +142,8 @@ void CNewProject01View::OnImageLoadImage()
 		//HRESULT hr = c_image.Load(strPathname);
 		if (!pDoc->m_Image.IsNull())
 		{
-
+			pre->movepoint.x = -1;
+			pre->movepoint.y = -1;
 			inH = pDoc->m_Image.GetHeight();
 			inW = pDoc->m_Image.GetWidth();
 			free2DImage(inImageR, inH);
@@ -151,7 +152,6 @@ void CNewProject01View::OnImageLoadImage()
 			free2DImage(outImageR, outH);
 			free2DImage(outImageG, outH);
 			free2DImage(outImageB, outH);
-
 			temp_image.Destroy();
 			c_image.Destroy();
 			m_nMagnify = 1;
@@ -160,14 +160,11 @@ void CNewProject01View::OnImageLoadImage()
 			m_point.x = pDoc->m_Image.GetWidth() / 2;
 			m_point.y = pDoc->m_Image.GetHeight() / 2;
 			pDoc->m_Image.Destroy();
-			
 			//m_PreviewDlg->DestroyWindow();
 			//m_PreviewDlg = NULL;
-
 			pre->p_image.Destroy();
 			pre->DestroyWindow();
 			pre = NULL;
-
 
 		}
 		//CT2CA pszString(strPathname);
@@ -179,11 +176,11 @@ void CNewProject01View::OnImageLoadImage()
 		*/
 		pre = new Preview;
 		pre->Create(IDD_DIALOG1, this);
+		pre->movepoint.x = -1;
+		pre->movepoint.y = -1;
 		pre->p_image.Load(strPathname);
 		pre->ShowWindow(SW_SHOW);
-		c_image.Create(pre->p_image.GetWidth(), pre->p_image.GetHeight(), 8);
-		c_image.Load(strPathname);
-		pDoc->m_Image.Create(pre->p_image.GetWidth(), pre->p_image.GetHeight(), 8);
+		//pDoc->m_Image.Create(pre->p_image.GetWidth(), pre->p_image.GetHeight(),);
 		pDoc->m_Image.Load(strPathname);
 		inH = pDoc->m_Image.GetHeight();
 		inW = pDoc->m_Image.GetWidth();
@@ -264,7 +261,7 @@ void CNewProject01View::OnImageSaveImage()
 		//int BitPerPixel = pDoc->m_Image.GetBPP();
 		int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL);
 		ReleaseDC(pSourceDC);
-		tips_image.Create(wid, hei, 16);
+		//tips_image.Create(wid, hei, 16);
 		CDC* pDestDC = CDC::FromHandle(tips_image.GetDC());
 		//tips_image.Create(wid, hei, 32, 0);e
 		SetStretchBltMode(pDestDC->m_hDC, HALFTONE);
@@ -293,46 +290,6 @@ void CNewProject01View::OnDraw(CDC* pDC)
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 	if (!pDoc->m_Image.IsNull())
 	{
-		if (pre->movepoint.x != -1 && pre->movepoint.y != -1)
-		{
-			m_point.x = pre->movepoint.x;
-			m_point.y = pre->movepoint.y;
-			pre->movepoint.x = -1;
-			pre->movepoint.y = -1;
-		}
-		/*
-		CFile f;
-		BITMAPFILEHEADER bmfh;
-		DWORD dwFileSize, dwDibSize;
-		f.Open((strPathname), CFile::modeRead | CFile::shareDenyWrite, NULL);
-		dwFileSize = (DWORD)f.GetLength();
-		//전체 사이즈에서 BITMAPFILEHEADER를 빼면 DIB사이즈가 된다.
-		dwDibSize = dwFileSize - sizeof(BITMAPFILEHEADER);
-		BYTE *pDib = new BYTE[dwDibSize];
-
-		f.Read(&bmfh, sizeof(BITMAPFILEHEADER));//fileheader 구조체읽기
-		f.Read(pDib, dwDibSize); //DIB읽기
-		f.Close();
-
-		BITMAPINFOHEADER *pBmh = (BITMAPINFOHEADER*)pDib;
-		int nWidth = pBmh->biWidth;
-		int nHeight = pBmh->biHeight;
-		int nBit = pBmh->biBitCount;
-		BYTE *lpBits = NULL;
-		//실제 데이터 위치
-		if (nBit > 8)
-		{
-			lpBits = (BYTE*)pDib + sizeof(BITMAPINFOHEADER);
-		}
-		else
-		{
-			lpBits = (BYTE*)pDib + sizeof(BITMAPINFOHEADER)+sizeof(RGBQUAD)+(1 << nBit);
-		}
-		// 데이터 화면에 표현
-		*/
-
-	
-		//::SetDIBitsToDevice(dc.m_hDC, 0, 0, nWidth, nHeight, 0, 0, 0, nHeight, lpBits, (LPBITMAPINFO)pDib, DIB_RGB_COLORS);
 		CClientDC dc(this);
 		pDC = &dc;
 		CRect new_rect;
@@ -341,7 +298,6 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			i_hei = pDoc->m_Image.GetHeight();
 			wid = 0.4*new_rect.Width();
 			hei = 0.4*new_rect.Width();
-			//::StretchDIBits(dc.m_hDC, 0, 0, wid, hei, 0, 0, nWidth, nHeight, lpBits, (LPBITMAPINFO)pDib, DIB_RGB_COLORS, SRCCOPY);
 			if (i_wid > i_hei)
 			{
 				hei = wid*(i_hei / i_wid);
@@ -631,13 +587,13 @@ void CNewProject01View::OnImageErrosion()
 	inImageR = malloc2D(inH, inW);
 	inImageG = malloc2D(inH, inW);
 	inImageB = malloc2D(inH, inW);
-	COLORREF pixel; // 한 점(R,G,B)
 	int imgBPP = pDoc->m_Image.GetBPP();
 	for (int i = 0; i < inH; i++)
 	{
 		for (int k = 0; k < inW; k++) {
+			COLORREF pixel; // 한 점(R,G,B)
 			//memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k,i), imgBPP);
-			memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k, i), imgBPP);
+			memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k, i), imgBPP/3);
 			//pixel = GetPointColor(&(pDoc->m_Image), k, i);
 			//pixel = pDoc->m_Image.GetPixel(k, i);
 			inImageR[i][k] = (unsigned char)GetRValue(pixel);
@@ -657,7 +613,7 @@ void CNewProject01View::OnImageErrosion()
 	outImageR = malloc2D(outH, outW);
 	outImageG = malloc2D(outH, outW);
 	outImageB = malloc2D(outH, outW);
-	temp_image.Create(i_wid, i_hei, 16);
+	//temp_image.Create(i_wid, i_hei, 16);
 	int mask[3][3] = { { -1, -1, -1 },
 	{ -1, 8, -1 },
 	{ -1, -1, -1 }
@@ -691,13 +647,12 @@ void CNewProject01View::OnImageErrosion()
 		unsigned char R, G, B;
 		for (i = 0; i < outH; i++) {
 			for (k = 0; k < outW; k++) {
-				COLORREF pixel;
+				COLORREF pix;
 				R = outImageR[i][k];
 				G = outImageG[i][k];
 				B = outImageB[i][k];
-				pixel = RGB(R, G, B);
-
-				memcpy(pDoc->m_Image.GetPixelAddress(k, i), &pixel, imgBPP);
+				pix = RGB(R, G, B);
+				memcpy(pDoc->m_Image.GetPixelAddress(k, i), &pix, imgBPP/3);
 			}
 		}
 		pre->p_image = pDoc->m_Image;
@@ -722,13 +677,16 @@ void CNewProject01View::OnImageDilation()
 	inImageR = malloc2D(inH, inW);
 	inImageG = malloc2D(inH, inW);
 	inImageB = malloc2D(inH, inW);
-	COLORREF pixel; // 한 점(R,G,B)
+	BYTE *byteptr = (BYTE*)pDoc->m_Image.GetBits();
+	int pitch = pDoc->m_Image.GetPitch();
+
 	int imgBPP = pDoc->m_Image.GetBPP();
 	for (int i = 0; i < inH; i++)
 	{
 		for (int k = 0; k < inW; k++) {
-			//memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k,i), imgBPP);
-			memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k, i), imgBPP);
+
+			COLORREF pixel; // 한 점(R,G,B)
+			memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k, i), imgBPP/3);
 			//pixel = GetPointColor(&(pDoc->m_Image), k, i);
 			//pixel = pDoc->m_Image.GetPixel(k, i);
 			inImageR[i][k] = (unsigned char)GetRValue(pixel);
@@ -778,13 +736,14 @@ void CNewProject01View::OnImageDilation()
 	unsigned char R, G, B;
 	for (i = 0; i < outH; i++) {
 		for (k = 0; k < outW; k++) {
-			COLORREF pixel;
+			
 			R = outImageR[i][k];
 			G = outImageG[i][k];
 			B = outImageB[i][k];
-			pixel = RGB(R, G, B);
-
-			memcpy(pDoc->m_Image.GetPixelAddress(k, i), &pixel, imgBPP);
+			//pixel = RGB(R, G, B);
+			COLORREF p;
+			p=RGB(R, G, B);
+			memcpy(pDoc->m_Image.GetPixelAddress(k, i), &p, imgBPP);
 		}
 	}
 	pre->p_image = pDoc->m_Image;
@@ -792,27 +751,6 @@ void CNewProject01View::OnImageDilation()
 }
 
 
-
-void CNewProject01View::OnImageResize()
-{
-	//CClientDC h_dc(this);
-	//HDC h_dc = ::GetWindowDC(NULL);
-	CImage resize_image;
-	CDC *pSourceDC = CDC::FromHandle(pDoc->m_Image.GetDC());
-	int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL);
-	ReleaseDC(pSourceDC);
-	//int cx = ::GetSystemMetrics(SM_CXSCREEN);
-	//int cy = ::GetSystemMetrics(SM_CYSCREEN);
-	//int color_depth = ::GetDeviceCaps(h_dc, BITSPIXEL);
-	//tips_image.Create(wid, hei, color_depth, 0);
-	tips_image.Create(wid, hei, BitPerPixel, 0);
-	//tips_image.Create(wid, hei, 32, 0);
-	//::BitBlt(tips_image.GetDC(), 0, 0, wid, hei, h_dc, 0, 0, SRCCOPY);
-	//tips_image.Save(SstrPathname, ImageFormatBMP);
-	//::ReleaseDC(NULL, h_dc);
-	tips_image.ReleaseDC();
-	Invalidate(false);
-}
 
 /*
 void CNewProject01View::RGB2GRAY(COLORREF& rgb)

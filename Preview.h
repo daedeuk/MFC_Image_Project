@@ -11,7 +11,7 @@ private:
 	CWnd *mp_parent_wnd;
 public:
 	void SetParentWindow(CWnd *parm_parent_wnd);
-	CPoint movepoint=(-1,-1);
+	CPoint movepoint;
 	CPoint pre_point;
 	CRect R_Rect;
 	CBitmap	m_pBackBmp;

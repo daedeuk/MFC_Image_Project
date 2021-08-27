@@ -60,7 +60,6 @@ void Preview::OnPaint()
 {
 	CPaintDC dc(this); // device context for painting
 	CDC *pdc = &dc;
-
 	CRect p_rect;
 	GetClientRect(&p_rect);
 	//dc.GetClipBox(p_rect);
@@ -72,20 +71,12 @@ void Preview::OnPaint()
 	if (!p_image.IsNull())
 	{
 		SetStretchBltMode(pdc->m_hDC, HALFTONE);
-		//p_image.Draw(pdc->m_hDC, 0, 0, p_wid, p_hei, 0, 0, i_wid, i_hei, SRCCOPY);
-		
 		p_image.Draw(pdc->m_hDC, 0, 0, p_wid, p_hei, 0, 0, i_wid, i_hei);
 		if (!R_Rect.IsRectNull())
 		{
-			/*
-			CPen pen;
-			pen.CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
-			CPen *oldPen = dc.SelectObject(&pen);
-			dc.SelectObject(&pen);
-			*/
 			CBrush brush;
-			CPen MyPen(PS_SOLID,1,RGB(255,0,0));
-			CPen *oldPen=dc.SelectObject(&MyPen);
+			CPen MyPen(PS_SOLID, 1, RGB(255, 0, 0));
+			CPen *oldPen = dc.SelectObject(&MyPen);
 			brush.CreateStockObject(NULL_BRUSH);
 			CBrush *oldBrush = dc.SelectObject(&brush);
 
@@ -108,13 +99,16 @@ void Preview::OnPaint()
 			if (movepoint.x > -1)
 			{
 				((CNewProject01View *)GetParent())->CNewProject01View::pointmove(movepoint);
-				((CNewProject01View *)GetParent())->Invalidate(false);
 				movepoint.x = -1, movepoint.y = -1;
+				((CNewProject01View *)GetParent())->Invalidate(false);
 			}
-			Invalidate(false);
+			else if (movepoint.x = -1)
+			{
+				//((CNewProject01View *)GetParent())->Invalidate(false);
+			}
 		}
 	}
-
+	//ReleaseDC(NULL);
 	ReleaseDC(&dc);
 	ReleaseDC(pdc);
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
@@ -133,9 +127,10 @@ void Preview::OnLButtonDown(UINT nFlags, CPoint point)
 		{
 			movepoint.x = pre_point.x / p_wid*(((CNewProject01View *)GetParent())->i_wid);
 			movepoint.y = pre_point.y / p_hei*(((CNewProject01View *)GetParent())->i_hei);
-			OnPaint();
+			//OnPaint();
 		}
 	}
+	Invalidate(false);
 
 
 	CDialogEx::OnLButtonDown(nFlags, point);

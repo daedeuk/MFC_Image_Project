@@ -46,6 +46,7 @@ public:
 	void CNewProject01View::OnImageResize();
 	void CNewProject01View::RGB2GRAY(COLORREF& rgb);
 	void CNewProject01View::pointmove(CPoint movepoint);
+	COLORREF** m_pixel;
 	unsigned char** inImageR = NULL;
 	unsigned char** inImageG = NULL;
 	unsigned char** inImageB = NULL;
