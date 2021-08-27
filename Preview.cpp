@@ -122,30 +122,16 @@ void Preview::OnPaint()
 void Preview::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	pre_point.x = point.x;
-	pre_point.y = point.y;
-	if (!p_image.IsNull())
+	if (point.x >= 0 && point.x < p_wid&&point.y >= 0 && point.y < p_hei)
 	{
-		//((CNewProject01View *)GetParent())->m_point.x= pre_point.x / p_wid * (R_Rect.Width()) + (R_Rect.TopLeft().x);
-		//((CNewProject01View *)GetParent())->m_point.y= pre_point.y / p_hei * (R_Rect.Height()) + (R_Rect.TopLeft().y);
-		//((CNewProject01View *)GetParent())->m_point.x = pre_point.x / p_wid*(((CNewProject01View *)GetParent())->i_wid);
-		//((CNewProject01View *)GetParent())->m_point.y = pre_point.y / p_hei*(((CNewProject01View *)GetParent())->i_hei);
-		movepoint.x = pre_point.x / p_wid*(((CNewProject01View *)GetParent())->i_wid);
-		movepoint.y = pre_point.y / p_hei*(((CNewProject01View *)GetParent())->i_hei);
-		//Invalidate(false);
-		OnPaint();
-		//((CNewProject01View *)GetParent())->CNewProject01View::pointmove(movepoint);
-		//((CNewProject01View *)GetParent())->OnLButtonDown(nFlags, pre_point);
-		
-		/*
-		double p_x1 = movepoint.x - R_Rect.Width() / 2;
-		double p_y1 = movepoint.y - R_Rect.Height() / 2;
-		double p_x2 = movepoint.x + R_Rect.Width() / 2;
-		double p_y2 = movepoint.y + R_Rect.Height() / 2;
-		CRect p_rect(p_x1, p_y1, p_x2, p_y2);
-		R_Rect = p_rect;
-		Invalidate(true);
-		*/
+		pre_point.x = point.x;
+		pre_point.y = point.y;
+		if (!p_image.IsNull())
+		{
+			movepoint.x = pre_point.x / p_wid*(((CNewProject01View *)GetParent())->i_wid);
+			movepoint.y = pre_point.y / p_hei*(((CNewProject01View *)GetParent())->i_hei);
+			OnPaint();
+		}
 	}
 
 

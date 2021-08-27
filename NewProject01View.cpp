@@ -551,59 +551,22 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 				m_point.x = p_point.x / wid * (pre->R_Rect.Width()) + (pre->R_Rect.TopLeft().x);
 				m_point.y = p_point.y / hei*  (pre->R_Rect.Height()) + (pre->R_Rect.TopLeft().y);
 				Invalidate(false);
-				/*
-				if (point.x < wid / 2)
-				{
-					m_point.x = m_point.x -(p_point.x / wid*(pre->R_Rect.Width()));
-					if (m_point.x< 0)
-					{
-						m_point.x = 0;
-					}
-					Invalidate(false);
-				}
-				else
-				{
-					m_point.x = m_point.x + p_point.x / wid*(pre->R_Rect.Width());
-					if (m_point.x + (pre->R_Rect.Width() / 2)>i_wid)
-					{
-						m_point.x = i_wid - pre->R_Rect.Width() / 2;
-					}
-					Invalidate(false);
-				}
-				if (point.y < hei / 2)
-				{
-					m_point.y = m_point.y -(p_point.y / hei*(pre->R_Rect.Height()));
-					if (m_point.y< 0)
-					{
-						m_point.y= 0;
-					}
-					Invalidate(false);
-				}
-				else
-				{
-					m_point.y = m_point.y + p_point.y / hei*(pre->R_Rect.Height());
-					if (m_point.y + (pre->R_Rect.Height() / 2)>i_hei)
-					{
-						m_point.y = i_hei - pre->R_Rect.Height() / 2;
-					}
-					Invalidate(false);
-				}
-				*/
 			}
 		}
 		else
 		{
-			p_point.x = point.x;
-			p_point.y = point.y;
+			if (m_nMagnify < 7)
+			{
+				p_point.x = point.x;
+				p_point.y = point.y;
 
-			if (i_wid != 0 && wid != 0)
-			{
-				m_point.x = p_point.x / wid * (pre->R_Rect.Width()) + (pre->R_Rect.TopLeft().x);
-				m_point.y = p_point.y / hei*  (pre->R_Rect.Height()) + (pre->R_Rect.TopLeft().y);
-			}
-			if (m_nMagnify == 0 || m_nMagnify == 1)
-			{
-				//m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
+				if (i_wid != 0 && wid != 0)
+				{
+					m_point.x = p_point.x / wid * (pre->R_Rect.Width()) + (pre->R_Rect.TopLeft().x);
+					m_point.y = p_point.y / hei*  (pre->R_Rect.Height()) + (pre->R_Rect.TopLeft().y);
+				}
+				if (m_nMagnify == 0 || m_nMagnify == 1)
+				{
 					p_point.x = point.x;
 					p_point.y = point.y;
 					if (i_wid != 0 && wid != 0)
@@ -611,23 +574,10 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 						m_point.x = p_point.x / wid*(i_wid)*zoom;
 						m_point.y = p_point.y / hei*(i_hei)*zoom;
 					}
-			}
-			/*
-			else if (m_nMagnify > 1)
-			{
-				for (int i = 0; i < m_nMagnify; i++)
-				{
-					//x0 y0 x1 y1 ÃøÁ¤
-				//	if (m_point.x)
 				}
-			}
-			*/
-			if (m_nMagnify < 7)
-			{
 				zoom = 1;
 				++m_nMagnify;
 			}
-//			Preview::OnLButtonDown(nFlags, point);
 		}
 	}
 	Invalidate(false);
@@ -657,26 +607,18 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 		}
 		else
 		{
-			if (m_nMagnify==0 ||m_nMagnify == 1)
+			if (m_nMagnify > 1)
 			{
-				//m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
-				p_point.x = point.x;
-				p_point.y = point.y;
-				if (i_wid != 0 && wid != 0)
+				if (m_nMagnify == 0 || m_nMagnify == 1)
 				{
-					m_point.x = p_point.x / wid*(i_wid)*zoom;
-					m_point.y = p_point.y / hei*(i_hei)*zoom;
+					p_point.x = point.x;
+					p_point.y = point.y;
+					if (i_wid != 0 && wid != 0)
+					{
+						m_point.x = p_point.x / wid*(i_wid)*zoom;
+						m_point.y = p_point.y / hei*(i_hei)*zoom;
+					}
 				}
-			}
-			/*
-			else if (m_nMagnify < 1)
-			{
-				//m_point.x = pDoc->m_Image.GetWidth() / 2;
-				//m_point.y = pDoc->m_Image.GetHeight() / 2;
-			}
-			*/
-			if (m_nMagnify>1)
-			{
 				zoom = 1;
 				--m_nMagnify;
 			}
