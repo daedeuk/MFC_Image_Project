@@ -32,6 +32,7 @@ BEGIN_MESSAGE_MAP(CNewProject01View, CFormView)
 	ON_UPDATE_COMMAND_UI(ID_FILE_OPEN, &CNewProject01View::OnUpdateImageLoadimage)
 	ON_COMMAND(ID_FILE_SAVE, &CNewProject01View::OnImageSaveImage)
 	ON_COMMAND(ID_PROCESSING_ERROSION, &CNewProject01View::OnImageErrosion)
+	ON_COMMAND(ID_PROCESSING_DILATION, &CNewProject01View::OnImageDilation)
 	ON_WM_DESTROY()
 	ON_STN_CLICKED(IDC_STATIC_DISP, &CNewProject01View::OnStnClickedStaticDisp)
 	ON_WM_LBUTTONDOWN()
@@ -695,31 +696,102 @@ void CNewProject01View::OnImageErrosion()
 				G = outImageG[i][k];
 				B = outImageB[i][k];
 				pixel = RGB(R, G, B);
-				/*
-				inImageR[i][k] = NULL;
-				inImageG[i][k] = NULL;
-				inImageB[i][k] = NULL;
-				outImageR[i][k] = NULL;
-				outImageG[i][k] = NULL;
-				outImageB[i][k] = NULL;
-				*/
+
 				memcpy(pDoc->m_Image.GetPixelAddress(k, i), &pixel, imgBPP);
-				//pDoc->m_Image.SetPixel(k, i, RGB(R, G, B));
-				//PointColor(&temp_image, k, i, RGB(R, G, B), temp_image.GetBPP()/3);
-				//PointColor(&temp_image, k, i, RGB(R, G, B), 16);
-				
-				//temp_image.SetPixel(k, i, RGB(R, R, R));
 			}
 		}
-		//pDoc->m_Image.Destroy();
-		//pDoc->m_Image.Create(temp_image.GetWidth(), temp_image.GetHeight(), temp_image.GetBPP()/3);
-		//pDoc->m_Image.Create(temp_image.GetWidth(), temp_image.GetHeight(), 16);
-		//pDoc->m_Image = temp_image;
-		//pre->p_image.Destroy();
-		//pre->p_image.Create(pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight(), imgBPP);
 		pre->p_image = pDoc->m_Image;
 		Invalidate(false);
 }
+
+void CNewProject01View::OnImageDilation()
+{
+	/*
+	// TODO: 여기에 구현 코드 추가.
+	if (inImageR == NULL)
+		return;
+	// 기존에 처리한 적이 있으면 일단 메모리 해제
+	*/
+	inH = i_hei;
+	inW = i_wid;
+	free2DImage(inImageR, inH);
+	free2DImage(inImageG, inH);
+	free2DImage(inImageB, inH);
+	// 중요! 출력 영상 크기 --> 알고리즘에 따름
+	// 출력 메모리 할당.
+	inImageR = malloc2D(inH, inW);
+	inImageG = malloc2D(inH, inW);
+	inImageB = malloc2D(inH, inW);
+	COLORREF pixel; // 한 점(R,G,B)
+	int imgBPP = pDoc->m_Image.GetBPP();
+	for (int i = 0; i < inH; i++)
+	{
+		for (int k = 0; k < inW; k++) {
+			//memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k,i), imgBPP);
+			memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k, i), imgBPP);
+			//pixel = GetPointColor(&(pDoc->m_Image), k, i);
+			//pixel = pDoc->m_Image.GetPixel(k, i);
+			inImageR[i][k] = (unsigned char)GetRValue(pixel);
+			inImageG[i][k] = (unsigned char)GetGValue(pixel);
+			inImageB[i][k] = (unsigned char)GetBValue(pixel);
+		}
+	}
+	free2DImage(outImageR, outH);
+	free2DImage(outImageG, outH);
+	free2DImage(outImageB, outH);
+	// 중요! 출력 영상 크기 --> 알고리즘에 따름
+	outH = inH;  outW = inW;
+	// 출력 메모리 할당.
+	outImageR = malloc2D(outH, outW);
+	outImageG = malloc2D(outH, outW);
+	outImageB = malloc2D(outH, outW);
+	int mask[3][3] = { { -1, -1, -1 },
+	{ -1, 8, -1 },
+	{ -1, -1, -1 }
+	};
+	unsigned char maxR = 0, maxG = 0, maxB = 0;
+	for (int i = 1; i < inH - 1; i++) {
+		for (int j = 1; j < inW - 1; j++) {
+			maxR = 0, maxG = 0, maxB = 0;
+			for (int k = 0; k < 3; k++)
+			{
+				for (int m = 0; m < 3; m++)
+				{
+					if (maxR < inImageR[i - 1 + k][j - 1 + m]) {
+						maxR = inImageR[i - 1 + k][j - 1 + m];
+					}
+					if (maxG < inImageG[i - 1 + k][j - 1 + m]) {
+						maxG = inImageG[i - 1 + k][j - 1 + m];
+					}
+					if (maxB < inImageB[i - 1 + k][j - 1 + m]) {
+						maxB = inImageB[i - 1 + k][j - 1 + m];
+					}
+				}
+			}
+			outImageR[i][j] = maxR;
+			outImageG[i][j] = maxG;
+			outImageB[i][j] = maxB;
+		}
+	}
+
+	int i, k;
+	unsigned char R, G, B;
+	for (i = 0; i < outH; i++) {
+		for (k = 0; k < outW; k++) {
+			COLORREF pixel;
+			R = outImageR[i][k];
+			G = outImageG[i][k];
+			B = outImageB[i][k];
+			pixel = RGB(R, G, B);
+
+			memcpy(pDoc->m_Image.GetPixelAddress(k, i), &pixel, imgBPP);
+		}
+	}
+	pre->p_image = pDoc->m_Image;
+	Invalidate(false);
+}
+
+
 
 void CNewProject01View::OnImageResize()
 {
@@ -751,112 +823,12 @@ void CNewProject01View::RGB2GRAY(COLORREF& rgb)
 }
 */
 
-
-void CNewProject01View::CreateBitmapInfo(int w, int h, int bpp)
-{
-	if (m_pBitmapInfo != NULL)
-	{
-		delete m_pBitmapInfo;
-		m_pBitmapInfo = NULL;
-	}
-
-	if (bpp == 8)
-		m_pBitmapInfo = (BITMAPINFO *) new BYTE[sizeof(BITMAPINFO)+255 * sizeof(RGBQUAD)];
-	else // 24 or 32bit
-		m_pBitmapInfo = (BITMAPINFO *) new BYTE[sizeof(BITMAPINFO)];
-
-	m_pBitmapInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-	m_pBitmapInfo->bmiHeader.biPlanes = 1;
-	m_pBitmapInfo->bmiHeader.biBitCount = bpp;
-	m_pBitmapInfo->bmiHeader.biCompression = BI_RGB;
-	m_pBitmapInfo->bmiHeader.biSizeImage = 0;
-	m_pBitmapInfo->bmiHeader.biXPelsPerMeter = 0;
-	m_pBitmapInfo->bmiHeader.biYPelsPerMeter = 0;
-	m_pBitmapInfo->bmiHeader.biClrUsed = 0;
-	m_pBitmapInfo->bmiHeader.biClrImportant = 0;
-
-	if (bpp == 8)
-	{
-		for (int i = 0; i < 256; i++)
-		{
-			m_pBitmapInfo->bmiColors[i].rgbBlue = (BYTE)i;
-			m_pBitmapInfo->bmiColors[i].rgbGreen = (BYTE)i;
-			m_pBitmapInfo->bmiColors[i].rgbRed = (BYTE)i;
-			m_pBitmapInfo->bmiColors[i].rgbReserved = 0;
-		}
-	}
-
-	m_pBitmapInfo->bmiHeader.biWidth = w;
-	m_pBitmapInfo->bmiHeader.biHeight = -h;
-}
-
-
-/*
-void TWAPI_CopyBitmap(CImage *ap_image, HBITMAP ah_bitmap)
-{
-	BITMAP bmp_info;
-
-	// ah_bitmap 비트맵의 속성 정보를 얻는다.
-	GetObject(ah_bitmap, sizeof(BITMAP), &bmp_info);
-	// ah_bitmap의 폭, 높이 그리고 색상 수와 일치한 비트맵을 생성한다.
-	ap_image->Create(bmp_info.bmWidth, bmp_info.bmHeight, bmp_info.bmBitsPixel);
-
-	// 현 그래픽 장치와 호환되는 'Memory DC'를 생성한다.
-	HDC h_dc = CreateCompatibleDC(NULL);
-	// 생성된 DC에 h_src_bmp를 연결한다.
-	SelectObject(h_dc, ah_bitmap);
-	// h_src_bmp의 '비트 패턴'이 dest_image 객체로 복사됩니다.
-	BitBlt(ap_image->GetDC(), 0, 0, bmp_info.bmWidth, bmp_info.bmHeight, h_dc, 0, 0,
-		SRCCOPY);
-
-	ap_image->ReleaseDC();  // '비트 패턴'에 사용하기 위해 생성한 DC 제거
-	DeleteDC(h_dc);             // '비트 패턴'에 사용하기 위해 생성한 DC 제거
-
-*/
-
 void CNewProject01View::pointmove(CPoint movepoint)
 {
 	m_point.x = movepoint.x;
 	m_point.y = movepoint.y;
 	return;
 }
-
-
-//setPixel 대용
-void CNewProject01View::PointColor(CImage *image, int x, int y, COLORREF c, int m_nBitDepth)
-{
-	// m_image.SetPixel() call ::SetPixel() which is too slow
-	// since it has to work with all DCs.
-
-	BYTE *p = (BYTE*)image->GetPixelAddress(x, y);
-	if (m_nBitDepth == 16) {
-		*(WORD *)p = (WORD)(((c & 0xf80000) >> 19) | ((c & 0xf800) >> 6) | ((c & 0xf8) << 7));
-	}
-	/*
-	else {
-		*p++ = GetBValue(c);
-		*p++ = GetGValue(c);
-		*p = GetRValue(c);
-	}
-	*/
-	
-}
-
-// GetPixel 대용
-COLORREF CNewProject01View::GetPointColor(CImage *image, int x, int y)
-{
-	COLORREF result = *((COLORREF*)image->GetPixelAddress(x, y)); //pxiel이 rgb만 사용하기 때문에 3byte를 사용하고 있다.
-
-	// 메모리에서 가져올때, blue와 red위치가 바뀌어서 가져와진다
-
-	BYTE r = GetBValue(result);
-	BYTE g = GetGValue(result);
-	BYTE b = GetRValue(result);
-
-	return RGB(r, g, b);
-}
-
-
 
 unsigned char** CNewProject01View::malloc2D(int h, int w) {
 	unsigned char** p;

@@ -152,6 +152,7 @@ public:
 	afx_msg void OnUpdateImageLoadimage(CCmdUI *pCmdUI);
 	afx_msg void OnImageSaveImage();
 	afx_msg void OnImageErrosion();
+	afx_msg void OnImageDilation();
 	afx_msg void OnDestroy();
 	afx_msg void OnStnClickedStaticDisp();
 	CStatic m_stDisp;
