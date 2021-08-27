@@ -237,8 +237,8 @@ void CNewProject01View::OnImageSaveImage()
 //HDC h_dc = ::GetWindowDC(NULL);
 		CImage tips_image;
 		CDC *pSourceDC = CDC::FromHandle(pDoc->m_Image.GetDC());
-		int BitPerPixel = pDoc->m_Image.GetBPP();
-		//int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL8;
+		//int BitPerPixel = pDoc->m_Image.GetBPP();
+		int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL);
 		ReleaseDC(pSourceDC);
 		tips_image.Create(wid, hei, BitPerPixel, 0);
 		CDC* pDestDC = CDC::FromHandle(tips_image.GetDC());
@@ -281,8 +281,6 @@ void CNewProject01View::OnDraw(CDC* pDC)
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
-	
-
 	
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 	if (!pDoc->m_Image.IsNull())
@@ -344,16 +342,6 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			{
 				wid = hei*(i_wid / i_hei);
 			}
-			/*
-			if (((i_wid > i_hei) && ((i_wid / i_hei) > (wid / hei))) || ((i_wid < i_hei) && ((i_wid / i_hei)<(wid / hei))))
-			{
-				hei = 0.8*(i_hei / i_wid)*wid;
-			}
-			else if (((i_wid>i_hei) && ((i_wid / i_hei) < (wid / hei))) || ((i_wid<i_hei) && ((i_wid / i_hei)>(wid / hei))))
-			{
-				wid = 0.8*(i_wid / i_hei)*hei;
-			}
-			*/
 		CRect this_rect(0, 0, wid, hei);
 
 		//확대 
@@ -387,15 +375,10 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0,wid, hei, x1, y1, x2, y2, SRCCOPY);
 			
 			
-			
 			//StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, 0,0,image.cols, image.rows, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
 			//StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, pDoc->m_Image.GetPixelAddress(0,0), m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
 			
 			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
-
-
-
-
 
 			//CT2CA pszSTring(strPathname);
 			//std::string strPath(pszSTring);
@@ -437,24 +420,17 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			double x1 = m_point.x - (i_wid / 2)*zoom;
 			if (x1 < 0)
 			{
-				//double x3 = x1;
-				//x2 = x2 - x3;
 				x1 = 1;
 			}
 			double y1 = m_point.y - (i_hei / 2)*zoom;
 			if (y1 < 0)
 			{
-				//double y3 = y1;
-				//y2 = y2 - y1;
 				y1 = 1;
 			}
 			double x2 = m_point.x + (i_wid / 2)*zoom;
 			if (x2>i_wid)
 			{
 				x2 = i_wid-1;
-				//double x3 = i_wid*zoom;
-				//x1 = x1 - (x2 - x3);
-				//x2 = x3;
 			}
 			double y2 = m_point.y + (i_hei / 2)*zoom;
 			if (y2 > i_hei)
@@ -505,7 +481,6 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			//StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2 - x1, y2 - y1, pDoc->m_Image.GetPixelAddress(0, 0), m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
 			//StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2 - x1, y2 - y1, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
 			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
-			
 		}
 
 		ReleaseDC(&dc);
@@ -665,7 +640,7 @@ void CNewProject01View::OnImageErrosion()
 	outImageR = malloc2D(outH, outW);
 	outImageG = malloc2D(outH, outW);
 	outImageB = malloc2D(outH, outW);
-	temp_image.Create(i_wid, i_hei, 8);
+	temp_image.Create(i_wid, i_hei, 32);
 	int mask[3][3] = { { -1, -1, -1 },
 	{ -1, 8, -1 },
 	{ -1, -1, -1 }
@@ -709,8 +684,6 @@ void CNewProject01View::OnImageErrosion()
 			}
 		}
 		pDoc->m_Image = temp_image;
-	
-
 		pre->p_image = temp_image;
 		Invalidate(false);
 }

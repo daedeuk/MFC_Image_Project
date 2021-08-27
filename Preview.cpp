@@ -66,6 +66,7 @@ void Preview::OnPaint()
 	//dc.GetClipBox(p_rect);
 	p_wid = p_rect.Width();
 	p_hei = p_rect.Height();
+
 	double i_wid = p_image.GetWidth();
 	double i_hei = p_image.GetHeight();
 	if (!p_image.IsNull())
@@ -83,6 +84,8 @@ void Preview::OnPaint()
 			dc.SelectObject(&pen);
 			*/
 			CBrush brush;
+			CPen MyPen(PS_SOLID,1,RGB(255,0,0));
+			CPen *oldPen=dc.SelectObject(&MyPen);
 			brush.CreateStockObject(NULL_BRUSH);
 			CBrush *oldBrush = dc.SelectObject(&brush);
 
