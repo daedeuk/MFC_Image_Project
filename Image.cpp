@@ -199,7 +199,7 @@ bool CImage_WIS::Read(CFile *pFile)
 				tmp = lFileHeight - m_szImageSize.cy;
 
 /*				for(int i=0; i<tmp; i++){
-					pFile->Read(m_pRectPointer[0], nWidth);
+					pFile->s(m_pRectPointer[0], nWidth);
 					if( pBMIH->biWidth>m_szImageSize.cx )	pFile->Read(ttt, pBMIH->biWidth-m_szImageSize.cx);
 				}*/
 				for(int i=0; i<m_szImageSize.cy; i++){

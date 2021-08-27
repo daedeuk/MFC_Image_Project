@@ -36,6 +36,8 @@ public:
 	cv::Mat image;
 	cv::Mat m_matImage;
 	void CreateBitmapInfo(int w, int h, int bpp);
+	HBITMAP m_hbitmap;
+	void TWAPI_CopyBitmap(CImage *ap_image, HBITMAP ah_bitmap);
 	void DrawImage();
 	void CNewProject01View::OnImageResize();
 	void CNewProject01View::RGB2GRAY(COLORREF& rgb);
@@ -87,7 +89,6 @@ private:
 	CRect m_image_rect;
 	CImage Buf_image;
 	CString strPathname;
-	CFile f;
 	CDib rtrt;
 	CRect image_rect;
 	double x, y;

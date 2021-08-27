@@ -140,7 +140,6 @@ void CNewProject01View::OnImageLoadImage()
 	{
 		CString strPathname = dlg.GetPathName();
 		pDoc = GetDocument();
-		CFile f;
 		//HRESULT hr = c_image.Load(strPathname);
 		if (!pDoc->m_Image.IsNull())
 		{
@@ -158,42 +157,24 @@ void CNewProject01View::OnImageLoadImage()
 			pre->DestroyWindow();
 			pre = NULL;
 		}
-		CT2CA pszString(strPathname);
-		std::string strPath(pszString);
-		image = cv::imread(strPath);
-		CreateBitmapInfo(image.cols, image.rows, image.channels() * 8);
-
-		
-		//cv::namedWindow("Image");
-		//cv::imshow("Image", image);
-		
-		cv::Mat eroded;
-		cv::erode(image, eroded, cv::Mat());
-		cv::namedWindow("Eroded Image");
-		cv::imshow("Eroded Image", eroded);
-		
-		/*
-		//팽창
-		cv::Mat dilated;
-		cv::dilate(image, dilated, cv::Mat());
-		//팽창된 연상을 띄워보기
-		cv::namedWindow("Dilated Image");
-		cv::imshow("Dilated Image", dilated);
-		*/
-		//영상을 세 번 침식시키기.
-		cv::erode(image, eroded, cv::Mat(), cv::Point(-1, -1), 3);
-		cv::namedWindow("Eroded Image (3 times)");
-		cv::imshow("Eroded Image (3 times)", eroded);
-		
-		
+		//CT2CA pszString(strPathname);
+		//std::string strPath(pszString);
+		//image = cv::imread(strPath);
 		/*
 		CreateBitmapInfo(m_matImage.cols, m_matImage.rows, m_matImage.channels() * 8);
 		DrawImage();
 		*/
-
-
+		pre = new Preview;
+		pre->Create(IDD_DIALOG1, this);
+		pre->p_image.Load(strPathname);
+		pre->ShowWindow(SW_SHOW);
+		pDoc->m_Image.Create(pre->p_image.GetWidth(), pre->p_image.GetHeight(), 8);
 		pDoc->m_Image.Load(strPathname);
-		
+		BITMAP image_bmp_info;
+		GetObject((HBITMAP)pDoc->m_Image, sizeof(BITMAP), &image_bmp_info);
+		image_bmp_info.bmBits;
+
+		//CreateBitmapInfo(pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight() , pDoc->m_Image.GetBPP());
 		//m_PreviewDlg = new CPreviewDlg();
 		//m_PreviewDlg->Create(IDD_DIALOG1, this);
 		//m_PreviewDlg->ShowWindow(SW_SHOW);
@@ -214,11 +195,6 @@ void CNewProject01View::OnImageLoadImage()
 			}
 		}
 		*/
-
-		pre = new Preview;
-		pre->Create(IDD_DIALOG1, this);
-		pre->p_image.Load(strPathname);
-		pre->ShowWindow(SW_SHOW);
 		
 		
 		//c_image.Load(strPathname);
@@ -263,11 +239,12 @@ void CNewProject01View::OnImageSaveImage()
 //HDC h_dc = ::GetWindowDC(NULL);
 		CImage tips_image;
 		CDC *pSourceDC = CDC::FromHandle(pDoc->m_Image.GetDC());
-		int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL);
+		int BitPerPixel = pDoc->m_Image.GetBPP();
+		//int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL8;
 		ReleaseDC(pSourceDC);
 		tips_image.Create(wid, hei, BitPerPixel, 0);
 		CDC* pDestDC = CDC::FromHandle(tips_image.GetDC());
-		//tips_image.Create(wid, hei, 32, 0);
+		//tips_image.Create(wid, hei, 32, 0);e
 		SetStretchBltMode(pDestDC->m_hDC, HALFTONE);
 		//SetStretchBltMode(pDestDC->m_hDC, COLORONCOLOR);
 		pDestDC->StretchBlt(0, 0, wid, hei, pSourceDC, pre->R_Rect.TopLeft().x, pre->R_Rect.TopLeft().y,
@@ -307,9 +284,44 @@ void CNewProject01View::OnDraw(CDC* pDC)
 	if (!pDoc)
 		return;
 	
+
+	
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 	if (!pDoc->m_Image.IsNull())
 	{
+		/*
+		CFile f;
+		BITMAPFILEHEADER bmfh;
+		DWORD dwFileSize, dwDibSize;
+		f.Open((strPathname), CFile::modeRead | CFile::shareDenyWrite, NULL);
+		dwFileSize = (DWORD)f.GetLength();
+		//전체 사이즈에서 BITMAPFILEHEADER를 빼면 DIB사이즈가 된다.
+		dwDibSize = dwFileSize - sizeof(BITMAPFILEHEADER);
+		BYTE *pDib = new BYTE[dwDibSize];
+
+		f.Read(&bmfh, sizeof(BITMAPFILEHEADER));//fileheader 구조체읽기
+		f.Read(pDib, dwDibSize); //DIB읽기
+		f.Close();
+
+		BITMAPINFOHEADER *pBmh = (BITMAPINFOHEADER*)pDib;
+		int nWidth = pBmh->biWidth;
+		int nHeight = pBmh->biHeight;
+		int nBit = pBmh->biBitCount;
+		BYTE *lpBits = NULL;
+		//실제 데이터 위치
+		if (nBit > 8)
+		{
+			lpBits = (BYTE*)pDib + sizeof(BITMAPINFOHEADER);
+		}
+		else
+		{
+			lpBits = (BYTE*)pDib + sizeof(BITMAPINFOHEADER)+sizeof(RGBQUAD)+(1 << nBit);
+		}
+		// 데이터 화면에 표현
+		*/
+
+	
+		//::SetDIBitsToDevice(dc.m_hDC, 0, 0, nWidth, nHeight, 0, 0, 0, nHeight, lpBits, (LPBITMAPINFO)pDib, DIB_RGB_COLORS);
 		CClientDC dc(this);
 		pDC = &dc;
 		CRect new_rect;
@@ -318,6 +330,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			i_hei = pDoc->m_Image.GetHeight();
 			wid = 0.4*new_rect.Width();
 			hei = 0.4*new_rect.Width();
+			//::StretchDIBits(dc.m_hDC, 0, 0, wid, hei, 0, 0, nWidth, nHeight, lpBits, (LPBITMAPINFO)pDib, DIB_RGB_COLORS, SRCCOPY);
 			if (i_wid > i_hei)
 			{
 				hei = wid*(i_hei / i_wid);
@@ -340,6 +353,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 
 		//확대 
 		SetStretchBltMode(pDC->m_hDC, HALFTONE);
+
 		//SetStretchBltMode(pDC->m_hDC, COLORONCOLOR);
 		if (m_nMagnify == 1)
 		{
@@ -370,8 +384,9 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			
 			
 			//StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, 0,0,image.cols, image.rows, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
-			StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
-			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
+			//StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, pDoc->m_Image.GetPixelAddress(0,0), m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			
+			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
 
 
 
@@ -460,8 +475,9 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			temp_image.ReleaseDC();
 			*/
 
-			StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2 - x1, y2 - y1, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
-			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
+			//StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2 - x1, y2 - y1, pDoc->m_Image.GetPixelAddress(0, 0), m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			//StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2 - x1, y2 - y1, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
 		
 		}
 		else if (m_nMagnify<1)
@@ -481,9 +497,9 @@ void CNewProject01View::OnDraw(CDC* pDC)
 			zoom = 1;
 			//pDoc->m_Image.Draw(pDC->m_hDC, 1, 1, wid - 1, hei - 1, x1, y1, x2, y2);
 
-
-			StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2 - x1, y2 - y1, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
-			//pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
+			//StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2 - x1, y2 - y1, pDoc->m_Image.GetPixelAddress(0, 0), m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			//StretchDIBits(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2 - x1, y2 - y1, image.data, m_pBitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			pDoc->m_Image.StretchBlt(pDC->m_hDC, 0, 0, wid, hei, x1, y1, x2-x1, y2-y1, SRCCOPY);
 			
 		}
 
@@ -572,6 +588,14 @@ void CNewProject01View::OnLButtonDown(UINT nFlags, CPoint point)
 		}
 		else
 		{
+			p_point.x = point.x;
+			p_point.y = point.y;
+
+			if (i_wid != 0 && wid != 0)
+			{
+				m_point.x = p_point.x / wid * (pre->R_Rect.Width()) + (pre->R_Rect.TopLeft().x);
+				m_point.y = p_point.y / hei*  (pre->R_Rect.Height()) + (pre->R_Rect.TopLeft().y);
+			}
 			if (m_nMagnify == 0 || m_nMagnify == 1)
 			{
 				//m_VectorRect.push_back(CRect(point.x, point.y, 0, 0));
@@ -646,7 +670,7 @@ void CNewProject01View::OnRButtonDown(UINT nFlags, CPoint point)
 				//m_point.y = pDoc->m_Image.GetHeight() / 2;
 			}
 			*/
-			if (m_nMagnify>-6)
+			if (m_nMagnify>1)
 			{
 				zoom = 1;
 				--m_nMagnify;
@@ -694,7 +718,7 @@ void CNewProject01View::OnImageErrosion()
 	outImageR = malloc2D(outH, outW);
 	outImageG = malloc2D(outH, outW);
 	outImageB = malloc2D(outH, outW);
-	temp_image.Create(i_wid, i_hei, 32, 0);
+	temp_image.Create(i_wid, i_hei, 8);
 	int mask[3][3] = { { -1, -1, -1 },
 	{ -1, 8, -1 },
 	{ -1, -1, -1 }
@@ -750,7 +774,6 @@ void CNewProject01View::OnImageResize()
 	//HDC h_dc = ::GetWindowDC(NULL);
 	CImage resize_image;
 	CDC *pSourceDC = CDC::FromHandle(pDoc->m_Image.GetDC());
-
 	int BitPerPixel = pSourceDC->GetDeviceCaps(BITSPIXEL);
 	ReleaseDC(pSourceDC);
 	//int cx = ::GetSystemMetrics(SM_CXSCREEN);
@@ -813,3 +836,27 @@ void CNewProject01View::CreateBitmapInfo(int w, int h, int bpp)
 	m_pBitmapInfo->bmiHeader.biWidth = w;
 	m_pBitmapInfo->bmiHeader.biHeight = -h;
 }
+
+
+/*
+void TWAPI_CopyBitmap(CImage *ap_image, HBITMAP ah_bitmap)
+{
+	BITMAP bmp_info;
+
+	// ah_bitmap 비트맵의 속성 정보를 얻는다.
+	GetObject(ah_bitmap, sizeof(BITMAP), &bmp_info);
+	// ah_bitmap의 폭, 높이 그리고 색상 수와 일치한 비트맵을 생성한다.
+	ap_image->Create(bmp_info.bmWidth, bmp_info.bmHeight, bmp_info.bmBitsPixel);
+
+	// 현 그래픽 장치와 호환되는 'Memory DC'를 생성한다.
+	HDC h_dc = CreateCompatibleDC(NULL);
+	// 생성된 DC에 h_src_bmp를 연결한다.
+	SelectObject(h_dc, ah_bitmap);
+	// h_src_bmp의 '비트 패턴'이 dest_image 객체로 복사됩니다.
+	BitBlt(ap_image->GetDC(), 0, 0, bmp_info.bmWidth, bmp_info.bmHeight, h_dc, 0, 0,
+		SRCCOPY);
+
+	ap_image->ReleaseDC();  // '비트 패턴'에 사용하기 위해 생성한 DC 제거
+	DeleteDC(h_dc);             // '비트 패턴'에 사용하기 위해 생성한 DC 제거
+
+*/
