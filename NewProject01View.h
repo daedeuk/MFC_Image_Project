@@ -31,6 +31,8 @@ protected: // serialization에서만 만들어집니다.
 	CNewProject01View();
 	DECLARE_DYNCREATE(CNewProject01View)
 public:
+
+	int imgBPP;
 	unsigned char** CNewProject01View::malloc2D(int h, int w);
 	void CNewProject01View::free2DImage(unsigned char** image, int h);
 

@@ -141,6 +141,16 @@ void CNewProject01View::OnImageLoadImage()
 		//HRESULT hr = c_image.Load(strPathname);
 		if (!pDoc->m_Image.IsNull())
 		{
+
+			inH = pDoc->m_Image.GetHeight();
+			inW = pDoc->m_Image.GetWidth();
+			free2DImage(inImageR, inH);
+			free2DImage(inImageG, inH);
+			free2DImage(inImageB, inH);
+			free2DImage(outImageR, outH);
+			free2DImage(outImageG, outH);
+			free2DImage(outImageB, outH);
+
 			temp_image.Destroy();
 			c_image.Destroy();
 			m_nMagnify = 1;
@@ -156,6 +166,8 @@ void CNewProject01View::OnImageLoadImage()
 			pre->p_image.Destroy();
 			pre->DestroyWindow();
 			pre = NULL;
+
+
 		}
 		//CT2CA pszString(strPathname);
 		//std::string strPath(pszString);
@@ -172,25 +184,16 @@ void CNewProject01View::OnImageLoadImage()
 		c_image.Load(strPathname);
 		pDoc->m_Image.Create(pre->p_image.GetWidth(), pre->p_image.GetHeight(), 8);
 		pDoc->m_Image.Load(strPathname);
-		HRESULT hr;
-		// Get the bitmap image from the stream
-		if ((hr = pDoc->m_Image.Load(strPathname)) == S_OK)
-		{
-			// Copy the dib data to the provided buffer
-			int pitch = pDoc->m_Image.GetPitch();
-			int height = pDoc->m_Image.GetHeight();
-			BYTE* pBits = (BYTE*)pDoc->m_Image.GetBits();
-			if (pitch < 0)
-				pBits += (pitch *(height - 1));
-			BITMAP captureImage;
-			//memcpy(, imageData, pBits, abs(pitch) * height);
-		}
-
-
-
-		BITMAP image_bmp_info;
-		GetObject((HBITMAP)pDoc->m_Image, sizeof(BITMAP), &image_bmp_info);
-		image_bmp_info.bmBits;
+		inH = pDoc->m_Image.GetHeight();
+		inW = pDoc->m_Image.GetWidth();
+		inImageR = malloc2D(inH, inW);
+		inImageG = malloc2D(inH, inW);
+		inImageB = malloc2D(inH, inW);
+		outH = inH;  outW = inW;
+		// 출력 메모리 할당.
+		outImageR = malloc2D(outH, outW);
+		outImageG = malloc2D(outH, outW);
+		outImageB = malloc2D(outH, outW);
 
 		//CreateBitmapInfo(pDoc->m_Image.GetWidth(), pDoc->m_Image.GetHeight() , pDoc->m_Image.GetBPP());
 		//m_PreviewDlg = new CPreviewDlg();
@@ -615,6 +618,8 @@ void CNewProject01View::OnImageErrosion()
 	return;
 	*/
 	// 기존에 처리한 적이 있으면 일단 메모리 해제
+	
+	
 	inH = i_hei;
 	inW = i_wid;
 	free2DImage(inImageR, inH);
@@ -642,6 +647,9 @@ void CNewProject01View::OnImageErrosion()
 	free2DImage(outImageR, outH);
 	free2DImage(outImageG, outH);
 	free2DImage(outImageB, outH);
+
+
+
 	// 중요! 출력 영상 크기 --> 알고리즘에 따름
 	outH = inH;  outW = inW;
 	// 출력 메모리 할당.
@@ -687,6 +695,14 @@ void CNewProject01View::OnImageErrosion()
 				G = outImageG[i][k];
 				B = outImageB[i][k];
 				pixel = RGB(R, G, B);
+				/*
+				inImageR[i][k] = NULL;
+				inImageG[i][k] = NULL;
+				inImageB[i][k] = NULL;
+				outImageR[i][k] = NULL;
+				outImageG[i][k] = NULL;
+				outImageB[i][k] = NULL;
+				*/
 				memcpy(pDoc->m_Image.GetPixelAddress(k, i), &pixel, imgBPP);
 				//pDoc->m_Image.SetPixel(k, i, RGB(R, G, B));
 				//PointColor(&temp_image, k, i, RGB(R, G, B), temp_image.GetBPP()/3);
