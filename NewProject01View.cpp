@@ -62,8 +62,8 @@ CNewProject01View::~CNewProject01View()
 void CNewProject01View::DoDataExchange(CDataExchange* pDX)
 {
 	CFormView::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_STATIC_DISP, m_stDisp);
-	DDX_Control(pDX, IDC_MY_PICTURE, M_stDisp);
+	//  DDX_Control(pDX, IDC_STATIC_DISP, m_stDisp);
+	//  DDX_Control(pDX, IDC_MY_PICTURE, M_stDisp);
 }
 
 BOOL CNewProject01View::PreCreateWindow(CREATESTRUCT& cs)
@@ -152,8 +152,6 @@ void CNewProject01View::OnImageLoadImage()
 			free2DImage(outImageR, outH);
 			free2DImage(outImageG, outH);
 			free2DImage(outImageB, outH);
-			temp_image.Destroy();
-			c_image.Destroy();
 			m_nMagnify = 1;
 			zoom = 1;
 			wid, hei, i_wid, i_hei = 0;
