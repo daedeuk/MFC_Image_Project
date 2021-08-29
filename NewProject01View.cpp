@@ -256,13 +256,6 @@ void CNewProject01View::OnImageSaveImage()
 		
 		//CClientDC h_dc(this);
 //HDC h_dc = ::GetWindowDC(NULL);
-
-
-
-		pDoc->m_Image.Save(SstrPathname);
-
-
-		/*
 		CImage tips_image;
 		CDC *pSourceDC = CDC::FromHandle(pDoc->m_Image.GetDC());
 		//int BitPerPixel = pDoc->m_Image.GetBPP();
@@ -279,12 +272,9 @@ void CNewProject01View::OnImageSaveImage()
 		//::BitBlt(tips_image.GetDC(), 0, 0, wid, hei, h_dc, 0, 0, SRCCOPY);
 		//tips_image.Save(SstrPathname, Gdiplus::ImageFormatBMP);
 		tips_image.Save(SstrPathname);
-
-
 		//::ReleaseDC(NULL, h_dc);lo
 		pDoc->m_Image.ReleaseDC();
 		tips_image.ReleaseDC();
-		*/
 	}
 }
 
