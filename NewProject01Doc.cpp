@@ -52,6 +52,7 @@ BOOL CNewProject01Doc::OnOpenDocument(LPCTSTR lpszPathName)
 	//m_Image.Load(lpszPathName);
 	if (!CDocument::OnOpenDocument(lpszPathName))
 		return FALSE;
+	/*
 	if (FAILED(m_Image.Load(lpszPathName)))
 		return FALSE;
 	//CFile에서 처리
@@ -95,6 +96,7 @@ BOOL CNewProject01Doc::OnOpenDocument(LPCTSTR lpszPathName)
 
 	height = dibHi.biHeight;
 	width = dibHi.biWidth;
+	*/
 	return TRUE;
 }
 
@@ -103,6 +105,7 @@ BOOL CNewProject01Doc::OnSaveDocument(LPCTSTR lpszPathName)
 {
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	/*
 	if (FAILED(m_Image.Save(lpszPathName)))
 		return FALSE;
 	CFile hFile;
@@ -118,7 +121,7 @@ BOOL CNewProject01Doc::OnSaveDocument(LPCTSTR lpszPathName)
 
 	hFile.Write(m_InImg, dibHi.biSizeImage);
 	hFile.Close();
-
+	*/
 	return TRUE;
 
 }

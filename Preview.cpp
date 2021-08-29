@@ -36,19 +36,10 @@ END_MESSAGE_MAP()
 
 
 // Preview 메시지 처리기입니다.
-
-
 //int Preview::OnCreate(LPCREATESTRUCT lpCreateStruct)
 //{
 //	if (CDialogEx::OnCreate(lpCreateStruct) == -1)
 //		return -1;
-//	CClientDC cdc(this);
-//	CDC *ppdc;
-//	ppdc = &cdc;
-//	m_MemDC.CreateCompatibleDC(&cdc);
-//	m_cDC.CreateCompatibleDC(&cdc);
-//	//CBitmap p_bitmap = CBitmap::FromHandle(p_image);
-//	//!m_pBackBmp.LoadBitmapW(p_bitmap);
 //
 //	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
 //
@@ -146,20 +137,13 @@ void Preview::SetParentWindow(CWnd *parm_parent_wnd)
 void Preview::OnOK()
 {
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-
 	CDialogEx::OnOK();
-	//if (mp_parent_wnd != NULL) mp_parent_wnd->PostMessage(SC_CLOSE);
-	//mp_parent_wnd->PostMessage(SC_CLOSE);
+	Invalidate(false);
 }
 
 
 void Preview::OnCancel()
 {
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-
 	CDialogEx::OnCancel();
-	//if (mp_parent_wnd != NULL) mp_parent_wnd->PostMessage(LM_CLOSE_DLG_MESSAGE);
-	
-	//if (mp_parent_wnd != NULL) mp_parent_wnd->PostMessage(SC_CLOSE);
-	//mp_parent_wnd->PostMessage(SC_CLOSE);
 }
