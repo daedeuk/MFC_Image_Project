@@ -34,7 +34,6 @@ public:
 	int imgBPP; //이미지의 pixel 당 비트수
 	unsigned char** CNewProject01View::malloc2D(int h, int w);
 	void CNewProject01View::free2DImage(unsigned char** image, int h);
-	BITMAPINFO *m_pBitmapInfo;
 	void CNewProject01View::PointColor(CImage *image, int x, int y, COLORREF c, int m_nBitDepth);
 	
 	//preview에서 눌러진 좌표로 이동하는 함수
@@ -102,10 +101,6 @@ public:
 public:
 	void DrawClipImage(HDC ah_dc, CImage *ap_image, POINT a_clip_start_pos, POINT a_clip_end_pos,
 		int a_use_fixed_pos = 0, int a_fixed_x = 0, int a_fixed_y = 0);
-	// ah_dc : 이미지를 출력할 DC의 핸들, ap_image : 부분 이미지를 사용할 CImage 객체의 주소
-	// a_clip_start_pos : 원본 이미지에서 부분 이미지가 시작될 좌표, a_clip_end_pos : 원본 이미지에서 부분 이미지가 끝날 좌표
-	// a_use_fixed_pos 값이 1이면 부분 이미지를 출력할때 특정 위치(a_fixed_x, a_fixed_y)를 지정, 0이면 사용 안함
-
 	virtual void OnDraw(CDC* pDC);
 	CRect CNewProject01View::Zoom_in_out(int m_nMagnify);
 

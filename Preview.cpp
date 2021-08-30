@@ -53,7 +53,6 @@ void Preview::OnPaint()
 	CDC *pdc = &dc;
 	CRect p_rect;
 	GetClientRect(&p_rect);
-	//dc.GetClipBox(p_rect);
 	p_wid = p_rect.Width();
 	p_hei = p_rect.Height();
 
@@ -82,11 +81,8 @@ void Preview::OnPaint()
 
 			BottomRight.x = BottomRight.x / i_wid*p_wid;
 			BottomRight.y = BottomRight.y / i_hei*p_hei;
-			//dc.MoveTo(TopLeft);
-			//dc.LineTo(BottomRight);
 			dc.Rectangle(TopLeft.x, TopLeft.y, BottomRight.x, BottomRight.y);
 			dc.SelectObject(oldBrush);
-			//pen.DeleteObject();
 			if (movepoint.x > -1)
 			{
 				((CNewProject01View *)GetParent())->CNewProject01View::pointmove(movepoint);
@@ -99,7 +95,6 @@ void Preview::OnPaint()
 			}
 		}
 	}
-	//ReleaseDC(NULL);
 	ReleaseDC(&dc);
 	ReleaseDC(pdc);
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
@@ -138,7 +133,6 @@ void Preview::OnOK()
 {
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 	CDialogEx::OnOK();
-	Invalidate(false);
 }
 
 

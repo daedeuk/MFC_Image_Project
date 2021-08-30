@@ -14,9 +14,7 @@ public:
 	CPoint movepoint;
 	CPoint pre_point;
 	CRect R_Rect;
-	CBitmap	m_pBackBmp;
-	CDC		m_MemDC;
-	CDC		m_cDC;
+
 	CImage p_image;
 
 	double p_wid;
@@ -33,7 +31,6 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-//	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnPaint();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	virtual void OnOK();

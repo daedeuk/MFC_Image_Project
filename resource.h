@@ -9,7 +9,7 @@
 #define IDR_NewProject01TYPE            130
 #define IDD_DIALOG1                     311
 #define IDC_MY_PICTURE                  1000
-#define IDC_STATIC_DISP					1001
+#define IDC_STATIC_DISP                 1001
 #define errosion                        1002
 #define IDC_PC_VIEW                     1004
 #define ID_PROCESSING_ERROSION          32771

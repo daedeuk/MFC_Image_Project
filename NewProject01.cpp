@@ -157,6 +157,7 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 //	virtual void OnOK();
 //	virtual void OnCancel();
+//	afx_msg void OnNcLButtonDown(UINT nHitTest, CPoint point);
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD)
@@ -172,6 +173,7 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 	ON_WM_PAINT()
 //	ON_WM_LBUTTONDOWN()
 ON_WM_CREATE()
+//ON_WM_NCLBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // 대화 상자를 실행하기 위한 응용 프로그램 명령입니다.
@@ -216,19 +218,3 @@ int CAboutDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	return 0;
 }
-
-
-//void CAboutDlg::OnOK()
-//{
-//	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-//	CDialogEx::OnOK();
-//	if (mp_parent_wnd != NULL) mp_parent_wnd->PostMessage(LM_CLOSE_DLG_MESSAGE);
-//}
-
-
-//void CAboutDlg::OnCancel()
-//{
-//	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-//
-//	CDialogEx::OnCancel();
-//}

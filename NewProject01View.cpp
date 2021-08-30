@@ -124,7 +124,6 @@ void CNewProject01View::OnImageLoadImage()
 			pre->p_image.Destroy();
 			pre->DestroyWindow();
 			pre = NULL;
-
 		}
 		pre = new Preview;
 		pre->Create(IDD_DIALOG1, this);
@@ -160,6 +159,7 @@ void CNewProject01View::OnImageSaveImage()
 	if (dlg.DoModal() == IDOK){
 		CString SstrPathname = dlg.GetPathName();
 		pDoc->m_Image.Save(SstrPathname);
+		//default는 bmp
 	}
 }
 
@@ -179,7 +179,7 @@ void CNewProject01View::OnDraw(CDC* pDC)
 		//현재 뷰의 크기를 받아주는 변수 new_rect
 		CRect new_rect;
 		GetClientRect(&new_rect);
-
+		//받아오는 이미지 그 자체의 크기를 i_wid, i_hei에 저장
 		i_wid = pDoc->m_Image.GetWidth();
 		i_hei = pDoc->m_Image.GetHeight();
 		//뷰에서 원하는 크기만 받기 위해서 작게 곱해주었습니다.
@@ -394,7 +394,7 @@ void CNewProject01View::OnImageErrosion()
 		for (int k = 0; k < inW; k++) {
 			COLORREF pixel; // 한 점(R,G,B)
 			//pixel은 rgb만 사용하기 때문에 3byte.
-			memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k, i), imgBPP/8);
+			memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k, i), imgBPP/8*3);
 			inImageR[i][k] = (unsigned char)GetRValue(pixel);
 			inImageG[i][k] = (unsigned char)GetGValue(pixel);
 			inImageB[i][k] = (unsigned char)GetBValue(pixel);
@@ -442,7 +442,7 @@ void CNewProject01View::OnImageErrosion()
 				G = outImageG[i][k];
 				B = outImageB[i][k];
 				pix = RGB(R, G, B);
-				memcpy(pDoc->m_Image.GetPixelAddress(k, i), &pix, imgBPP/8);
+				memcpy(pDoc->m_Image.GetPixelAddress(k, i), &pix, imgBPP/8*3);
 			}
 		}
 		pre->p_image = pDoc->m_Image;
@@ -471,7 +471,7 @@ void CNewProject01View::OnImageDilation()
 		for (int k = 0; k < inW; k++) {
 
 			COLORREF pixel; // 한 점(R,G,B)
-			memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k, i), imgBPP/8);
+			memcpy(&pixel, pDoc->m_Image.GetPixelAddress(k, i), imgBPP/8*3);
 			inImageR[i][k] = (unsigned char)GetRValue(pixel);
 			inImageG[i][k] = (unsigned char)GetGValue(pixel);
 			inImageB[i][k] = (unsigned char)GetBValue(pixel);
@@ -519,7 +519,7 @@ void CNewProject01View::OnImageDilation()
 			B = outImageB[i][k];
 			COLORREF p;
 			p=RGB(R, G, B);
-			memcpy(pDoc->m_Image.GetPixelAddress(k, i), &p, imgBPP/8);
+			memcpy(pDoc->m_Image.GetPixelAddress(k, i), &p, imgBPP/8*3);
 		}
 	}
 	pre->p_image = pDoc->m_Image;
