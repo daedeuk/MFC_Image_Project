@@ -13,7 +13,6 @@
 #include "NewProject01View.h"
 #include <atlimage.h>
 
-//#include "opencv2/opencv.hpp"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

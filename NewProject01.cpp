@@ -10,7 +10,7 @@
 
 #include "NewProject01Doc.h"
 #include "NewProject01View.h"
-//#include "opencv2\opencv.hpp"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
